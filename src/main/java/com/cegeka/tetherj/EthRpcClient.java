@@ -8,6 +8,8 @@ import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.ethereum.jsonrpc.JsonRpc;
+
 import com.cegeka.tetherj.crypto.CryptoUtil;
 import com.cegeka.tetherj.pojo.Block;
 import com.cegeka.tetherj.pojo.CompileOutput;
@@ -27,14 +29,27 @@ import com.googlecode.jsonrpc4j.ProxyUtil;
  *
  */
 public class EthRpcClient {
-
+	
+	private enum EthAdapter {
+		GETH,
+		EMBEDDED
+	};
+	
+	/**
+	 *  By default this class will forward all calls to Geth
+	 */
+	private EthAdapter ethAdapterType = EthAdapter.GETH;
+	
     /**
      * Ethereum rpc interface.
      */
-    JsonRpcHttpClient rpcClient;
+    private JsonRpcHttpClient rpcClient;
     private EthRpcInterface rpc;
+    private JsonRpc embeddedRpc;
+    
     public static final String DEFAULT_HOSTNAME = Optional
             .ofNullable(System.getProperty("geth.address")).orElse("127.0.0.1");
+    
     public static final int DEFAULT_PORT = 8545;
     private static final Logger log = Logger.getLogger(EthRpcClient.class.getName());
 
@@ -63,7 +78,12 @@ public class EthRpcClient {
             exception.printStackTrace();
         }
     }
-
+    
+    public EthRpcClient(JsonRpc rpc) {
+    	// We will use the embedded EVM from ethereumj
+    	this.ethAdapterType = EthAdapter.EMBEDDED;
+    }
+    
     /**
      * Get the ethereum client coinbase.
      *
@@ -72,7 +92,11 @@ public class EthRpcClient {
      *             In case of rpc errors.
      */
     public String getCoinbase() throws JsonRpcClientException {
-        return rpc.eth_coinbase();
+    	if (this.ethAdapterType == EthAdapter.GETH) {
+    		return rpc.eth_coinbase();
+    	} else {
+    		return embeddedRpc.eth_coinbase();
+    	}
     }
 
     /**
