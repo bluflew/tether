@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.cegeka</groupId>
 	<artifactId>tetherj</artifactId>
@@ -20,17 +19,7 @@
 			<name>blockchain releases</name>
 			<url>http://nexus.cegeka.be/nexus/content/repositories/blockchain-releases</url>
 		</repository>
-
 	</distributionManagement>
-
-	<repositories>
-		<repository>
-			<id>oss.jfrog.org</id>
-			<name>Repository from Bintray</name>
-			<url>http://dl.bintray.com/ethereum/maven</url>
-		</repository>
-	</repositories>
-
 	<scm>
 		<url>${scm.url}</url>
 		<connection>${scm.url}</connection>
@@ -140,6 +129,11 @@
 			<version>1.2.0</version>
 		</dependency>
 		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<version>2.7.0</version>
+		</dependency>
+		<dependency>
 			<groupId>org.bouncycastle</groupId>
 			<artifactId>bcprov-jdk15on</artifactId>
 			<version>1.54</version>
@@ -148,6 +142,16 @@
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-api</artifactId>
 			<version>2.5</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.5.2</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
+			<version>2.5.0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.madgag.spongycastle</groupId>
@@ -168,11 +172,6 @@
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
 			<version>3.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.ethereum</groupId>
-			<artifactId>ethereumj-core</artifactId>
-			<version>1.3.1-RELEASE</version>
 		</dependency>
 		<!-- avoiding one error during test execution, yet getting another one -->
 		<dependency>
