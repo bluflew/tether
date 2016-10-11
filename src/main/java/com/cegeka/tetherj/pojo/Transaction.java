@@ -2,6 +2,10 @@ package com.cegeka.tetherj.pojo;
 
 import java.io.Serializable;
 
+import org.ethereum.jsonrpc.JsonRpc.CallArguments;
+import org.ethereum.jsonrpc.TransactionResultDTO;
+import org.springframework.beans.BeanUtils;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.Data;
@@ -23,4 +27,18 @@ public class Transaction implements Serializable {
     public String to;
     public String transactionIndex;
     public String value;
+    
+    public Transaction() { }
+    
+    public Transaction(TransactionResultDTO tx) {
+    	BeanUtils.copyProperties(tx, this);
+    }
+    
+    public CallArguments toCallArgs() {
+    	CallArguments callArgs = new CallArguments();
+    	
+    	BeanUtils.copyProperties(this, callArgs);
+    	
+    	return callArgs;
+    }
 }

@@ -3,6 +3,8 @@ package com.cegeka.tetherj.pojo;
 import java.io.Serializable;
 
 import org.ethereum.core.CallTransaction.Function;
+import org.ethereum.jsonrpc.JsonRpc.CallArguments;
+import org.springframework.beans.BeanUtils;
 
 import com.cegeka.tetherj.crypto.CryptoUtil;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -22,8 +24,17 @@ public class TransactionCall implements Serializable {
     public Object[] decodeOutput(String output) {
         return methodFunction.decodeResult(CryptoUtil.hexToBytes(output));
     }
+    
+    public CallArguments toCallArgs() {
+    	CallArguments callArgs = new CallArguments();
+    	
+    	BeanUtils.copyProperties(this, callArgs);
+    	
+    	return callArgs;
+    }
 
     private Function methodFunction;
+    
     public String from;
     public String to;
     public String gas;

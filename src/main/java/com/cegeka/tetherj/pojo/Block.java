@@ -1,5 +1,8 @@
 package com.cegeka.tetherj.pojo;
 
+import org.ethereum.jsonrpc.JsonRpc.BlockResult;
+import org.springframework.beans.BeanUtils;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.Data;
@@ -7,7 +10,7 @@ import lombok.Data;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Block {
-    public String number;
+	public String number;
     public String hash;
     public String parentHash;
     public String nonce;
@@ -26,4 +29,10 @@ public class Block {
     public String timestamp;
     public String[] transactions;
     public String[] uncles;
+    
+    public Block() { }
+    
+    public Block(BlockResult block) {
+    	BeanUtils.copyProperties(block, this);
+    }
 }

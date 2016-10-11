@@ -2,6 +2,8 @@ package com.cegeka.tetherj.pojo;
 
 import java.util.HashMap;
 
+import org.ethereum.solidity.compiler.CompilationResult;
+
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -14,7 +16,13 @@ public class CompileOutput {
         contractData = new HashMap<>();
     }
 
-    @JsonAnySetter
+	public CompileOutput(CompilationResult result, String sourceCode) {
+		result.contracts.forEach((name, data) -> {
+			contractData.put(name, new ContractData(data, sourceCode, result.version));
+		});
+	}
+
+	@JsonAnySetter
     public void setDynamicContractData(String name, ContractData contract) {
         contractData.put(name, contract);
     }

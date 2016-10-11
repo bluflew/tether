@@ -29,29 +29,16 @@ import com.googlecode.jsonrpc4j.ProxyUtil;
  *
  */
 public class EthRpcClient {
-	
-	private enum EthAdapter {
-		GETH,
-		EMBEDDED
-	};
-	
-	/**
-	 *  By default this class will forward all calls to Geth
-	 */
-	private EthAdapter ethAdapterType = EthAdapter.GETH;
-	
     /**
      * Ethereum rpc interface.
      */
-    private JsonRpcHttpClient rpcClient;
     private EthRpcInterface rpc;
-    private JsonRpc embeddedRpc;
     
     public static final String DEFAULT_HOSTNAME = Optional
             .ofNullable(System.getProperty("geth.address")).orElse("127.0.0.1");
     
     public static final int DEFAULT_PORT = 8545;
-    private static final Logger log = Logger.getLogger(EthRpcClient.class.getName());
+    private static final Logger logger = Logger.getLogger(EthRpcClient.class.getName());
 
     public EthRpcClient() {
         this(DEFAULT_HOSTNAME, DEFAULT_PORT);
@@ -67,10 +54,11 @@ public class EthRpcClient {
      */
     public EthRpcClient(String hostname, int port) {
         URL url;
-        log.log(Level.INFO, "Geth address: " + hostname + ":" + port);
+        logger.log(Level.INFO, "Geth address: " + hostname + ":" + port);
         try {
             url = new URL("http://" + hostname + ":" + port + "/");
-            rpcClient = new JsonRpcHttpClient(url);
+            JsonRpcHttpClient rpcClient = new JsonRpcHttpClient(url);
+            
             rpc = ProxyUtil.createClientProxy(getClass().getClassLoader(), EthRpcInterface.class,
                     rpcClient);
 
@@ -81,7 +69,7 @@ public class EthRpcClient {
     
     public EthRpcClient(JsonRpc rpc) {
     	// We will use the embedded EVM from ethereumj
-    	this.ethAdapterType = EthAdapter.EMBEDDED;
+    	
     }
     
     /**
@@ -92,11 +80,7 @@ public class EthRpcClient {
      *             In case of rpc errors.
      */
     public String getCoinbase() throws JsonRpcClientException {
-    	if (this.ethAdapterType == EthAdapter.GETH) {
-    		return rpc.eth_coinbase();
-    	} else {
-    		return embeddedRpc.eth_coinbase();
-    	}
+    	return rpc.eth_coinbase();
     }
 
     /**
