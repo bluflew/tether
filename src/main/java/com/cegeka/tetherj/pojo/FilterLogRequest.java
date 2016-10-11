@@ -3,7 +3,7 @@ package com.cegeka.tetherj.pojo;
 import java.io.Serializable;
 import java.math.BigInteger;
 
-import org.ethereum.core.CallTransaction.Function;
+import org.ethereum.tether.core.CallTransaction.Function;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

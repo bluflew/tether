@@ -2,8 +2,8 @@ package com.cegeka.tetherj.pojo;
 
 import java.io.Serializable;
 
-import org.ethereum.core.CallTransaction.Function;
 import org.ethereum.jsonrpc.JsonRpc.CallArguments;
+import org.ethereum.tether.core.CallTransaction.Function;
 import org.springframework.beans.BeanUtils;
 
 import com.cegeka.tetherj.crypto.CryptoUtil;

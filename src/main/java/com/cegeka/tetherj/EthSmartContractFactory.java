@@ -6,8 +6,8 @@ import java.math.BigInteger;
 import java.util.Collection;
 import java.util.HashMap;
 
-import org.ethereum.core.CallTransaction.Function;
-import org.ethereum.util.ByteUtil;
+import org.ethereum.tether.core.CallTransaction.Function;
+import org.ethereum.tether.util.ByteUtil;
 
 import com.cegeka.tetherj.crypto.CryptoUtil;
 import com.cegeka.tetherj.pojo.ContractAbiMethod;

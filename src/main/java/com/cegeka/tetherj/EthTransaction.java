@@ -3,7 +3,7 @@ package com.cegeka.tetherj;
 import java.math.BigInteger;
 import java.util.Arrays;
 
-import org.ethereum.core.Transaction;
+import org.ethereum.tether.core.Transaction;
 
 import com.cegeka.tetherj.api.WalletLockedException;
 import com.cegeka.tetherj.crypto.CryptoUtil;

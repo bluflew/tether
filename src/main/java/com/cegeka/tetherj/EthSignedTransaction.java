@@ -2,7 +2,7 @@ package com.cegeka.tetherj;
 
 import java.math.BigInteger;
 
-import org.ethereum.crypto.HashUtil;
+import org.ethereum.tether.crypto.HashUtil;
 
 import com.cegeka.tetherj.crypto.CryptoUtil;
 
