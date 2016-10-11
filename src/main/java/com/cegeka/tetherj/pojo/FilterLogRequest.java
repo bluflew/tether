@@ -3,7 +3,9 @@ package com.cegeka.tetherj.pojo;
 import java.io.Serializable;
 import java.math.BigInteger;
 
+import org.ethereum.jsonrpc.JsonRpc.FilterRequest;
 import org.ethereum.tether.core.CallTransaction.Function;
+import org.springframework.beans.BeanUtils;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -53,4 +55,13 @@ public class FilterLogRequest implements Serializable {
     public void setToBlock(BigInteger toBlock) {
         setToBlock("0x" + toBlock.toString(16));
     }
+
+	public FilterRequest toFilterRequest() {
+		FilterRequest req = new FilterRequest();
+		
+		BeanUtils.copyProperties(this, req);
+		
+		return req;
+		
+	}
 }

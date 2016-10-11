@@ -2,8 +2,10 @@ package com.cegeka.tetherj;
 
 import java.io.IOException;
 import java.math.BigInteger;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import org.ethereum.jsonrpc.JsonRpc;
 import org.ethereum.solidity.compiler.CompilationResult;
@@ -151,8 +153,12 @@ public class EthJRpcAdapter implements EthRpcInterface {
 
 	@Override
 	public String eth_newFilter(FilterLogRequest request) {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			return rpc.eth_newFilter(request.toFilterRequest());
+		} catch (Exception e) {
+			logger.warning("Filter req failed: " + e.getMessage());
+			return null;
+		}
 	}
 
 	@Override
@@ -163,32 +169,29 @@ public class EthJRpcAdapter implements EthRpcInterface {
 
 	@Override
 	public Boolean eth_uninstallFilter(BigInteger filterId) {
-		// TODO Auto-generated method stub
-		return null;
+		return rpc.eth_uninstallFilter(filterId.toString());
 	}
 
 	@Override
 	public List<FilterLogObject> eth_getFilterChanges(String filterId) {
-		// TODO Auto-generated method stub
-		return null;
+		return Arrays.asList(rpc.eth_getFilterChanges(filterId)).stream().map(
+				filter -> new FilterLogObject((String)filter)).collect(Collectors.toList());
 	}
 
 	@Override
 	public List<String> eth_getFilterChangesTransactions(String filterId) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException("eth_getFilterChangesTransactions not supported");
 	}
 
 	@Override
 	public List<FilterLogObject> eth_getFilterLogs(String filterId) {
-		// TODO Auto-generated method stub
-		return null;
+		return Arrays.asList(rpc.eth_getFilterLogs(filterId)).stream().map(
+				filter -> new FilterLogObject((String)filter)).collect(Collectors.toList());
 	}
 
 	@Override
 	public boolean personal_unlockAccount(String account, String secret) {
-		// TODO Auto-generated method stub
-		return false;
+		return rpc.personal_unlockAccount(account, secret, null);
 	}
 
 }

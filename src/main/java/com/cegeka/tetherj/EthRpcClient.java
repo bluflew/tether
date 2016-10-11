@@ -69,7 +69,7 @@ public class EthRpcClient {
     
     public EthRpcClient(JsonRpc rpc) {
     	// We will use the embedded EVM from ethereumj
-    	
+    	this.rpc = new EthJRpcAdapter(rpc);
     }
     
     /**
