@@ -1,7 +1,14 @@
 package com.cegeka.tetherj;
 
 import java.math.BigInteger;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
+import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.ethereum.jsonrpc.JsonRpc;
 
 import com.cegeka.tetherj.crypto.CryptoUtil;
 import com.cegeka.tetherj.pojo.Block;
@@ -12,6 +19,8 @@ import com.cegeka.tetherj.pojo.Transaction;
 import com.cegeka.tetherj.pojo.TransactionCall;
 import com.cegeka.tetherj.pojo.TransactionReceipt;
 import com.googlecode.jsonrpc4j.JsonRpcClientException;
+import com.googlecode.jsonrpc4j.JsonRpcHttpClient;
+import com.googlecode.jsonrpc4j.ProxyUtil;
 
 /**
  * Class for rpc request invoker to ethereum client.
@@ -20,13 +29,32 @@ import com.googlecode.jsonrpc4j.JsonRpcClientException;
  *
  */
 public class EthRpcClient {
+	
+	private enum EthAdapter {
+		GETH,
+		EMBEDDED
+	};
+	
+	/**
+	 *  By default this class will forward all calls to Geth
+	 */
+	private EthAdapter ethAdapterType = EthAdapter.GETH;
+	
     /**
      * Ethereum rpc interface.
      */
-    private EthRpcAdapter ethRpcAdapter;
+    private JsonRpcHttpClient rpcClient;
+    private EthRpcInterface rpc;
+    private JsonRpc embeddedRpc;
+    
+    public static final String DEFAULT_HOSTNAME = Optional
+            .ofNullable(System.getProperty("geth.address")).orElse("127.0.0.1");
+    
+    public static final int DEFAULT_PORT = 8545;
+    private static final Logger log = Logger.getLogger(EthRpcClient.class.getName());
 
     public EthRpcClient() {
-        this.ethRpcAdapter = new EthRpcAdapter();
+        this(DEFAULT_HOSTNAME, DEFAULT_PORT);
     }
 
     /**
@@ -37,10 +65,24 @@ public class EthRpcClient {
      * @param port
      *            Port for ethereum client.
      */
-	public EthRpcClient(String hostname, int port) {
-		this.ethRpcAdapter = new EthRpcAdapter(hostname, port);
+    public EthRpcClient(String hostname, int port) {
+        URL url;
+        log.log(Level.INFO, "Geth address: " + hostname + ":" + port);
+        try {
+            url = new URL("http://" + hostname + ":" + port + "/");
+            rpcClient = new JsonRpcHttpClient(url);
+            rpc = ProxyUtil.createClientProxy(getClass().getClassLoader(), EthRpcInterface.class,
+                    rpcClient);
+
+        } catch (MalformedURLException exception) {
+            exception.printStackTrace();
+        }
     }
-  
+    
+    public EthRpcClient(JsonRpc rpc) {
+    	// We will use the embedded EVM from ethereumj
+    	this.ethAdapterType = EthAdapter.EMBEDDED;
+    }
     
     /**
      * Get the ethereum client coinbase.
@@ -50,7 +92,11 @@ public class EthRpcClient {
      *             In case of rpc errors.
      */
     public String getCoinbase() throws JsonRpcClientException {
-    	return this.ethRpcAdapter.eth_coinbase();
+    	if (this.ethAdapterType == EthAdapter.GETH) {
+    		return rpc.eth_coinbase();
+    	} else {
+    		return embeddedRpc.eth_coinbase();
+    	}
     }
 
     /**
@@ -61,7 +107,7 @@ public class EthRpcClient {
      *             In case of rpc errors.
      */
     public String[] getAccounts() throws JsonRpcClientException {
-        return this.ethRpcAdapter.eth_accounts();
+        return rpc.eth_accounts();
     }
 
     /**
@@ -72,7 +118,7 @@ public class EthRpcClient {
      *             In case of rpc errors.
      */
     public BigInteger getLatestBlockNumber() throws JsonRpcClientException {
-        return CryptoUtil.hexToBigInteger(this.ethRpcAdapter.eth_blockNumber());
+        return CryptoUtil.hexToBigInteger(rpc.eth_blockNumber());
     }
 
     /**
@@ -85,7 +131,7 @@ public class EthRpcClient {
      *             In case of rpc errors.
      */
     public BigInteger getAccountNonce(String address) throws JsonRpcClientException {
-        String txCount = this.ethRpcAdapter.eth_getTransactionCount(address, "latest");
+        String txCount = rpc.eth_getTransactionCount(address, "latest");
         return CryptoUtil.hexToBigInteger(txCount);
     }
 
@@ -99,7 +145,7 @@ public class EthRpcClient {
      *             In case of rpc errors.
      */
     public BigInteger getAccountNonceWithPending(String address) throws JsonRpcClientException {
-        String txCount = this.ethRpcAdapter.eth_getTransactionCount(address, "pending");
+        String txCount = rpc.eth_getTransactionCount(address, "pending");
         return CryptoUtil.hexToBigInteger(txCount);
     }
 
@@ -115,7 +161,7 @@ public class EthRpcClient {
      *             In case of rpc errors.
      */
     public boolean unlockAccount(String address, String secret) throws JsonRpcClientException {
-        return this.ethRpcAdapter.personal_unlockAccount(address, secret);
+        return rpc.personal_unlockAccount(address, secret);
     }
 
     /**
@@ -135,7 +181,7 @@ public class EthRpcClient {
      */
     public String sendTransaction(String from, String fromSecret, String to, BigInteger valueWei)
             throws JsonRpcClientException {
-        boolean unlock = this.ethRpcAdapter.personal_unlockAccount(from, fromSecret);
+        boolean unlock = rpc.personal_unlockAccount(from, fromSecret);
 
         if (unlock) {
             return this.sendTransaction(from, to, valueWei);
@@ -164,7 +210,7 @@ public class EthRpcClient {
         transaction.setTo(to);
         transaction.setValue(valueWei.toString());
 
-        return this.ethRpcAdapter.eth_sendTransaction(transaction);
+        return rpc.eth_sendTransaction(transaction);
     }
 
     /**
@@ -178,7 +224,7 @@ public class EthRpcClient {
      */
     public String sendRawTransaction(String encodedSignedTransaction)
             throws JsonRpcClientException {
-        return this.ethRpcAdapter.eth_sendRawTransaction(encodedSignedTransaction);
+        return rpc.eth_sendRawTransaction(encodedSignedTransaction);
     }
 
     /**
@@ -205,7 +251,7 @@ public class EthRpcClient {
      *             In case of rpc errors.
      */
     public BigInteger getBalance(String address) throws JsonRpcClientException {
-        String balance = this.ethRpcAdapter.eth_getBalance(address, "latest");
+        String balance = rpc.eth_getBalance(address, "latest");
         return CryptoUtil.hexToBigInteger(balance);
     }
 
@@ -219,7 +265,7 @@ public class EthRpcClient {
      *             In case of rpc errors.
      */
     public TransactionReceipt getTransactionReceipt(String txHash) throws JsonRpcClientException {
-        return this.ethRpcAdapter.eth_getTransactionReceipt(txHash);
+        return rpc.eth_getTransactionReceipt(txHash);
     }
 
     /**
@@ -232,7 +278,7 @@ public class EthRpcClient {
      *             In case of rpc errors.
      */
     public Transaction getTransaction(String txHash) throws JsonRpcClientException {
-        return this.ethRpcAdapter.eth_getTransactionByHash(txHash);
+        return rpc.eth_getTransactionByHash(txHash);
     }
 
     /**
@@ -243,7 +289,7 @@ public class EthRpcClient {
      * @return output encoded
      */
     public String callMethod(TransactionCall call) {
-        return this.ethRpcAdapter.eth_call(call, "latest");
+        return rpc.eth_call(call, "latest");
     }
 
     /**
@@ -254,7 +300,7 @@ public class EthRpcClient {
      * @return output encoded
      */
     public String callMethod(EthCall call) {
-        return this.ethRpcAdapter.eth_call(call.getCall(), "latest");
+        return rpc.eth_call(call.getCall(), "latest");
     }
 
     /**
@@ -263,7 +309,7 @@ public class EthRpcClient {
      * @return The latest block object
      */
     public Block getLatestBlock() {
-        return this.ethRpcAdapter.eth_getBlockByNumber("latest", true);
+        return rpc.eth_getBlockByNumber("latest", true);
     }
 
     /**
@@ -272,7 +318,7 @@ public class EthRpcClient {
      * @return The gas limit of latest block on ethereum client
      */
     public BigInteger getLatestBlockGasLimit() {
-        Block block = this.ethRpcAdapter.eth_getBlockByNumber("latest", true);
+        Block block = rpc.eth_getBlockByNumber("latest", true);
         if (block != null) {
             return CryptoUtil.hexToBigInteger(block.gasLimit);
         }
@@ -288,7 +334,7 @@ public class EthRpcClient {
      * @return Compile output.
      */
     public CompileOutput compileSolidity(String sourceCode) {
-        return this.ethRpcAdapter.eth_compileSolidity(sourceCode);
+        return rpc.eth_compileSolidity(sourceCode);
     }
 
     /**
@@ -297,7 +343,7 @@ public class EthRpcClient {
      * @return Returns filter id from ethereum client.
      */
     public String newFilter() {
-        return this.ethRpcAdapter.eth_newFilter(FilterLogRequest.DEFAULT);
+        return rpc.eth_newFilter(FilterLogRequest.DEFAULT);
     }
 
     /**
@@ -308,7 +354,7 @@ public class EthRpcClient {
      * @return Returns filter id from ethereum client.
      */
     public String newFilter(FilterLogRequest filterLogRequest) {
-        return this.ethRpcAdapter.eth_newFilter(filterLogRequest);
+        return rpc.eth_newFilter(filterLogRequest);
     }
 
     /**
@@ -317,7 +363,7 @@ public class EthRpcClient {
      * @return Returns filter id from ethereum client.
      */
     public String newPendingTransactionFilter() {
-        return this.ethRpcAdapter.eth_newPendingTransactionFilter();
+        return rpc.eth_newPendingTransactionFilter();
     }
 
     /**
@@ -328,7 +374,7 @@ public class EthRpcClient {
      * @return Returns true for success.
      */
     public Boolean uninstallFilter(BigInteger filterId) {
-        return this.ethRpcAdapter.eth_uninstallFilter(filterId);
+        return rpc.eth_uninstallFilter(filterId);
     }
 
     /**
@@ -339,7 +385,7 @@ public class EthRpcClient {
      * @return Retuns the filter log object.
      */
     public List<FilterLogObject> getFilterChanges(String filterId) {
-        return this.ethRpcAdapter
+        return rpc
                 .eth_getFilterChanges(filterId);
     }
 
@@ -351,7 +397,7 @@ public class EthRpcClient {
      * @return Returns a filter log object.
      */
     public List<FilterLogObject> getFilterChanges(BigInteger filterId) {
-        return this.ethRpcAdapter.eth_getFilterChanges("0x" + filterId.toString(16));
+        return rpc.eth_getFilterChanges("0x" + filterId.toString(16));
     }
 
     /**
@@ -362,7 +408,7 @@ public class EthRpcClient {
      * @return Returns a filter log object
      */
     public List<String> getPendingTransactionFilterChanges(String filterId) {
-        return this.ethRpcAdapter.eth_getFilterChangesTransactions(filterId);
+        return rpc.eth_getFilterChangesTransactions(filterId);
     }
 
     /**
@@ -373,7 +419,7 @@ public class EthRpcClient {
      * @return a filter log object
      */
     public List<String> getPendingTransactionFilterChanges(BigInteger filterId) {
-        return this.ethRpcAdapter.eth_getFilterChangesTransactions("0x" + filterId.toString(16));
+        return rpc.eth_getFilterChangesTransactions("0x" + filterId.toString(16));
     }
 
     /**
@@ -384,7 +430,7 @@ public class EthRpcClient {
      * @return Retuns the filter log object.
      */
     public List<FilterLogObject> getFilterLogs(String filterId) {
-        return this.ethRpcAdapter
+        return rpc
                 .eth_getFilterLogs(filterId);
     }
 
@@ -396,6 +442,6 @@ public class EthRpcClient {
      * @return Returns a filter log object.
      */
     public List<FilterLogObject> getFilterLogs(BigInteger filterId) {
-        return this.ethRpcAdapter.eth_getFilterLogs("0x" + filterId.toString(16));
+        return rpc.eth_getFilterLogs("0x" + filterId.toString(16));
     }
 }
