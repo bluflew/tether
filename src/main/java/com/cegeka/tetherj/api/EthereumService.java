@@ -1,5 +1,23 @@
 package com.cegeka.tetherj.api;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.lang.reflect.UndeclaredThrowableException;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.ethereum.jsonrpc.JsonRpc;
+
 import com.cegeka.tetherj.EthCall;
 import com.cegeka.tetherj.EthEvent;
 import com.cegeka.tetherj.EthRpcClient;
@@ -15,22 +33,6 @@ import com.cegeka.tetherj.pojo.Transaction;
 import com.cegeka.tetherj.pojo.TransactionReceipt;
 import com.googlecode.jsonrpc4j.HttpException;
 import com.googlecode.jsonrpc4j.JsonRpcClientException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.lang.reflect.UndeclaredThrowableException;
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 /**
  * Implementation for an Ethereum service api.
@@ -122,6 +124,31 @@ public class EthereumService {
 
         rpc = new EthRpcClient(rpcHostname, port);
         logger.info("Created ethereum service");
+    }
+    
+    public EthereumService(int executorThreads, JsonRpc rpc) {
+        if (executorThreads > 0) {
+            ScheduledExecutorService executor = Executors.newScheduledThreadPool(executorThreads,
+                runnable -> {
+                    Thread thread = new Thread(runnable);
+
+                    thread.setUncaughtExceptionHandler(
+                        (thread1, ex) -> handleUnknownThrowables(ex)
+                    );
+
+                    return thread;
+                });
+
+            this.executor = executor;
+            logger.info("Created ethereum service with async support on " + executorThreads
+                + " threads!");
+        } else {
+            /* when 0 threads specified, service is always blocking */
+            this.executor = null;
+            logger.info("Created ethereum service with no async support!");
+        }
+        
+    	this.rpc = new EthRpcClient(rpc);
     }
 
     /**
