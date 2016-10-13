@@ -163,8 +163,7 @@ public class EthJRpcAdapter implements EthRpcInterface {
 
 	@Override
 	public String eth_newPendingTransactionFilter() {
-		// TODO Auto-generated method stub
-		return null;
+		return rpc.eth_newPendingTransactionFilter();
 	}
 
 	@Override
@@ -180,7 +179,8 @@ public class EthJRpcAdapter implements EthRpcInterface {
 
 	@Override
 	public List<String> eth_getFilterChangesTransactions(String filterId) {
-		throw new UnsupportedOperationException("eth_getFilterChangesTransactions not supported");
+		return Arrays.asList(this.rpc.eth_getFilterChanges(filterId)).stream().map(
+				filter -> (String)filter).collect(Collectors.toList());
 	}
 
 	@Override
@@ -192,6 +192,26 @@ public class EthJRpcAdapter implements EthRpcInterface {
 	@Override
 	public boolean personal_unlockAccount(String account, String secret) {
 		return rpc.personal_unlockAccount(account, secret, null);
+	}
+
+	@Override
+	public boolean miner_start() {
+		return this.rpc.miner_start();
+	}
+
+	@Override
+	public boolean miner_stop() {
+		return this.rpc.miner_stop();
+	}
+
+	@Override
+	public String eth_newBlockFilter() {
+		return this.rpc.eth_newBlockFilter();
+	}
+
+	@Override
+	public boolean eth_uninstallFilter(String filterId) {
+		return this.rpc.eth_uninstallFilter(filterId);
 	}
 
 }

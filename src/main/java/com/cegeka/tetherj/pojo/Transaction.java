@@ -37,7 +37,12 @@ public class Transaction implements Serializable {
     public CallArguments toCallArgs() {
     	CallArguments callArgs = new CallArguments();
     	
-    	BeanUtils.copyProperties(this, callArgs);
+    	callArgs.from = this.from;
+    	callArgs.to = this.to;
+    	callArgs.value = this.value;
+    	callArgs.nonce = this.nonce;
+    	callArgs.gas = this.gas;
+    	callArgs.gasPrice = this.gasPrice;
     	
     	return callArgs;
     }

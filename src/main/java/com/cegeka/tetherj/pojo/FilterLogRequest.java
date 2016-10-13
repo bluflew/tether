@@ -5,7 +5,6 @@ import java.math.BigInteger;
 
 import org.ethereum.jsonrpc.JsonRpc.FilterRequest;
 import org.ethereum.tether.core.CallTransaction.Function;
-import org.springframework.beans.BeanUtils;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -59,7 +58,10 @@ public class FilterLogRequest implements Serializable {
 	public FilterRequest toFilterRequest() {
 		FilterRequest req = new FilterRequest();
 		
-		BeanUtils.copyProperties(this, req);
+		req.fromBlock = this.fromBlock;
+		req.toBlock = this.toBlock;
+		req.address = this.address;
+		req.topics = this.topics;
 		
 		return req;
 		

@@ -1247,6 +1247,14 @@ public class EthereumService {
 
         return TetherjResponse.success(watch);
     }
+    
+    /**
+     * Mines a block.
+     * This only really works for the embedded EVM.
+     */
+    public String mineBlock() {
+    	return this.rpc.mineBlock();
+    }
 
     /**
      * Private method for watching events, calls itself async.

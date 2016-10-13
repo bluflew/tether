@@ -428,4 +428,48 @@ public class EthRpcClient {
     public List<FilterLogObject> getFilterLogs(BigInteger filterId) {
         return rpc.eth_getFilterLogs("0x" + filterId.toString(16));
     }
+    
+    /**
+     * Mines a block. Works only on the embedded EVM.
+     */
+    public String mineBlock() {
+    	if (this.rpc instanceof EthJRpcAdapter) {
+            String blockFilterId = rpc.eth_newBlockFilter();
+            
+            rpc.miner_start();
+            
+            int cnt = 0;
+            String newBlockHash;
+            while (true) {
+                List<String> blocks = rpc.eth_getFilterChangesTransactions(blockFilterId);
+                cnt += blocks.size();
+                if (cnt > 0) {
+                    newBlockHash = blocks.get(0);
+                    break;
+                }
+                try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+					logger.info("Interrupted sleep");
+				}
+            }
+            
+            rpc.miner_stop();
+            
+            try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				logger.info("Interrupted sleep");
+			}
+            
+            List<String> blocks = rpc.eth_getFilterChangesTransactions(blockFilterId);
+            cnt += blocks.size();
+            logger.info(cnt + " blocks mined");
+            rpc.eth_uninstallFilter(blockFilterId);
+            
+            return newBlockHash;
+    	} else {
+    		throw new UnsupportedOperationException("Cannot ask Geth to mine block, that's not how this works");
+    	}
+    }
 }

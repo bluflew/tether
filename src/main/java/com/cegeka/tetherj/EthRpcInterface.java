@@ -56,7 +56,15 @@ public interface EthRpcInterface {
     List<String> eth_getFilterChangesTransactions(String filterId);
 
     List<FilterLogObject> eth_getFilterLogs(String filterId);
+    
+    String eth_newBlockFilter();
 
+    boolean eth_uninstallFilter(String id);
+
+    boolean miner_start();
+    
+    boolean miner_stop();
+    
     /**
      * Experimental, remote unlocking.
      */
