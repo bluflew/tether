@@ -17,6 +17,8 @@ public class CompileOutput {
     }
 
 	public CompileOutput(CompilationResult result, String sourceCode) {
+		this();
+		
 		result.contracts.forEach((name, data) -> {
 			contractData.put(name, new ContractData(data, sourceCode, result.version));
 		});
