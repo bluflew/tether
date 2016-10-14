@@ -430,6 +430,18 @@ public class EthRpcClient {
     }
     
     /**
+     * Sets the coinbase and then mines a block(or a few).
+     * @param coinBase coinbase wallet to use
+     * @return the hash of the new blocl
+     * @throws Exception coinbase is a bad address
+     */
+    public String mineBlock(String coinBase) throws Exception {
+    	this.rpc.miner_setEtherbase(coinBase);
+    	
+    	return this.mineBlock();
+    }
+    
+    /**
      * Mines a block. Works only on the embedded EVM.
      */
     public String mineBlock() {

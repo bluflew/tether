@@ -65,6 +65,8 @@ public interface EthRpcInterface {
     
     boolean miner_stop();
     
+    boolean miner_setEtherbase(String coinBase) throws Exception;
+    
     /**
      * Experimental, remote unlocking.
      */

@@ -214,4 +214,9 @@ public class EthJRpcAdapter implements EthRpcInterface {
 		return this.rpc.eth_uninstallFilter(filterId);
 	}
 
+	@Override
+	public boolean miner_setEtherbase(String coinBase) throws Exception {
+		return this.rpc.miner_setEtherbase(coinBase);
+	}
+
 }

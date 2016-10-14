@@ -1255,6 +1255,17 @@ public class EthereumService {
     public String mineBlock() {
     	return this.rpc.mineBlock();
     }
+    
+    /**
+     * Mines a block using a given coinbase.
+     * 
+     * @param coinBase coinbase wallet address to use
+     * @return hash of the new block
+     * @throws Exception coinbase wallet issue
+     */
+    public String mineBlock(String coinBase) throws Exception {
+    	return this.rpc.mineBlock(coinBase);
+    }
 
     /**
      * Private method for watching events, calls itself async.
