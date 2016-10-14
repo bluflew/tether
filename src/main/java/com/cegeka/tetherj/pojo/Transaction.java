@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 import org.ethereum.jsonrpc.JsonRpc.CallArguments;
 import org.ethereum.jsonrpc.TransactionResultDTO;
-import org.springframework.beans.BeanUtils;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -31,7 +30,17 @@ public class Transaction implements Serializable {
     public Transaction() { }
     
     public Transaction(TransactionResultDTO tx) {
-    	BeanUtils.copyProperties(tx, this);
+    	this.blockHash = tx.blockHash;
+    	this.blockNumber = tx.blockNumber;
+    	this.from = tx.from;
+    	this.gas = tx.gas;
+    	this.gasPrice = tx.gasPrice;
+    	this.hash = tx.hash;
+    	this.input = tx.input;
+    	this.nonce = tx.nonce;
+    	this.to = tx.to;
+    	this.transactionIndex = tx.transactionIndex;
+    	this.value = tx.value;
     }
     
     public CallArguments toCallArgs() {

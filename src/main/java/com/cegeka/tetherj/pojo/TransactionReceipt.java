@@ -3,7 +3,6 @@ package com.cegeka.tetherj.pojo;
 import java.io.Serializable;
 
 import org.ethereum.jsonrpc.TransactionReceiptDTO;
-import org.springframework.beans.BeanUtils;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -27,6 +26,11 @@ public class TransactionReceipt implements Serializable {
     public TransactionReceipt() { }
     
     public TransactionReceipt(TransactionReceiptDTO txReceipt) {
-    	BeanUtils.copyProperties(txReceipt, this);
+    	this.blockHash = txReceipt.blockHash;
+    	this.blockNumber = String.valueOf(txReceipt.blockNumber);
+    	this.contractAddress = txReceipt.contractAddress;
+    	this.cumulativeGasUsed = String.valueOf(txReceipt.cumulativeGasUsed);
+    	this.gasUsed = String.valueOf(txReceipt.gasUsed);
+    	this.logs = txReceipt.logs;
     }
 }

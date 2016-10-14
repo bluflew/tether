@@ -1,7 +1,6 @@
 package com.cegeka.tetherj.pojo;
 
 import org.ethereum.jsonrpc.JsonRpc.BlockResult;
-import org.springframework.beans.BeanUtils;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -33,6 +32,24 @@ public class Block {
     public Block() { }
     
     public Block(BlockResult block) {
-    	BeanUtils.copyProperties(block, this);
+    	this.number = block.number;
+    	this.hash = block.hash;
+    	this.parentHash = block.parentHash;
+    	this.nonce = block.nonce;
+    	this.sha3Uncles = block.sha3Uncles;
+    	this.logsBloom = block.logsBloom;
+    	this.transactionsRoot = block.transactionsRoot;
+    	this.stateRoot = block.stateRoot;
+    	this.receiptRoot = block.receiptsRoot;
+    	this.miner = block.miner;
+    	this.difficulty = block.difficulty;
+    	this.totalDifficulty = block.totalDifficulty;
+    	this.extraData = block.extraData;
+    	this.size = block.size;
+    	this.gasLimit = block.gasLimit;
+    	this.gasUsed = block.gasUsed;
+    	this.timestamp = block.timestamp;
+    	this.transactions = (String [])block.transactions;
+    	this.uncles = block.uncles;
     }
 }
