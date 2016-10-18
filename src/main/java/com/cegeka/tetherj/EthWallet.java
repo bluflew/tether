@@ -1,11 +1,15 @@
 package com.cegeka.tetherj;
 
+import static org.ethereum.crypto.HashUtil.sha3;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.ethereum.core.Account;
+import org.ethereum.crypto.ECKey;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
@@ -64,6 +68,18 @@ public class EthWallet implements Serializable {
     public static EthWallet createWallet(String passphrase) {
         EthWallet wallet = new EthWallet(WalletStoragePojoV3.createWallet(passphrase));
         logger.info("Generated wallet " + wallet.getStorage().toString());
+        return wallet;
+    }
+    
+    public static EthWallet createDeterministicWallet(String seed) {
+        ECKey key = ECKey.fromPrivate(sha3(seed.getBytes()));
+        Account account = new Account();
+        account.init(key);
+        
+        EthWallet wallet = new EthWallet();
+        wallet.privateKey = key.getPrivKeyBytes();
+        wallet.storage = WalletStoragePojoV3.createFromPrivateKey(wallet.privateKey);
+        
         return wallet;
     }
 
