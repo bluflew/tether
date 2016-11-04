@@ -100,7 +100,7 @@
 				<configuration>
 					<propertyExpansion>config_loc=codestyle/</propertyExpansion>
 					<includeTestSourceDirectory>true</includeTestSourceDirectory>
-					<failOnViolation>true</failOnViolation>
+					<failOnViolation>false</failOnViolation>
 					<configLocation>codestyle/codestyle.xml</configLocation>
 					<logViolationsToConsole>true</logViolationsToConsole>
 					<violationSeverity>warning</violationSeverity>
