@@ -20,7 +20,9 @@ public class ContractData implements Serializable {
 
 	String code;
 	ContractInfo info;
-
+	
+	public ContractData() { }
+	
 	public ContractData(ContractMetadata data, String sourceCode, String solcVersion) {
 		this.code = toJsonHex(data.bin);
 
