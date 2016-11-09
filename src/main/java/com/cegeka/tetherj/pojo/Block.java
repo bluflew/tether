@@ -29,7 +29,9 @@ public class Block {
     public String[] transactions;
     public String[] uncles;
     
-    public Block() { }
+    public Block() {
+      // Needed for Jackson
+    }
     
     public Block(BlockResult block) {
     	this.number = block.number;
