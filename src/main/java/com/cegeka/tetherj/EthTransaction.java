@@ -15,8 +15,8 @@ import com.cegeka.tetherj.crypto.CryptoUtil;
  *
  */
 public class EthTransaction {
-    public static final BigInteger DEFAULT_GAS_PRICE = BigInteger.valueOf(50000000000L);
-    public static final BigInteger DEFAULT_GAS_LIMIT = BigInteger.valueOf(90000L);
+    public static BigInteger DEFAULT_GAS_PRICE = BigInteger.valueOf(50000000000L);
+    public static BigInteger DEFAULT_GAS_LIMIT = BigInteger.valueOf(90000L);
 
     /* may change in future ethereum updates */
     public static final BigInteger maximumGasLimit = BigInteger.valueOf(3141592L);
