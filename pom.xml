@@ -171,7 +171,7 @@
 		<dependency>
 			<groupId>org.ethereum</groupId>
 			<artifactId>ethereumj-core</artifactId>
-			<version>1.3.1-RELEASE</version>
+			<version>1.3.6-RELEASE</version>
 		</dependency>
 		<!-- avoiding one error during test execution, yet getting another one -->
 		<dependency>
