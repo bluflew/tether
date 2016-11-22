@@ -460,7 +460,7 @@ public class EthRpcClient {
                     break;
                 }
                 try {
-					Thread.sleep(100);
+					Thread.sleep(400);
 				} catch (InterruptedException e) {
 					logger.info("Interrupted sleep");
 				}
@@ -469,7 +469,7 @@ public class EthRpcClient {
             rpc.miner_stop();
             
             try {
-				Thread.sleep(100);
+				Thread.sleep(400);
 			} catch (InterruptedException e) {
 				logger.info("Interrupted sleep");
 			}
