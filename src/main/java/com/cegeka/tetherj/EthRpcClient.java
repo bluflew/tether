@@ -442,6 +442,28 @@ public class EthRpcClient {
     }
     
     /**
+     * Only for EtereumJ: start mining.
+     */
+    public void startMiner() {
+    	if (this.rpc instanceof EthJRpcAdapter) {
+    		this.rpc.miner_start();
+    	} else {
+    		throw new UnsupportedOperationException("Cannot ask Geth to mine, that's not how this works");
+    	}
+    }
+    
+    /**
+     * Only for EthereumJ: stop mining
+     */
+    public void stopMiner() {
+    	if (this.rpc instanceof EthJRpcAdapter) {
+    		this.rpc.miner_stop();
+    	} else {
+    		throw new UnsupportedOperationException("Cannot ask Geth to mine, that's not how this works");
+    	}
+    }
+    
+    /**
      * Mines a block. Works only on the embedded EVM.
      */
     public String mineBlock() {
@@ -481,7 +503,7 @@ public class EthRpcClient {
             
             return newBlockHash;
     	} else {
-    		throw new UnsupportedOperationException("Cannot ask Geth to mine block, that's not how this works");
+    		throw new UnsupportedOperationException("Cannot ask Geth to mine a block, that's not how this works");
     	}
     }
 }

@@ -1257,6 +1257,20 @@ public class EthereumService {
     }
     
     /**
+     * Starts the miner, only for EthereumJ
+     */
+    public void startMiner() {
+    	this.rpc.startMiner();
+    }
+    
+    /**
+     * Stops miner, only for EthereumJ
+     */
+    public void stopMiner() {
+    	this.rpc.stopMiner();
+    }
+    
+    /**
      * Mines a block using a given coinbase.
      * 
      * @param coinBase coinbase wallet address to use
