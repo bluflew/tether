@@ -5,18 +5,16 @@ import java.math.BigInteger;
 
 /**
  * Small web3 like util.
- * 
- * @author Andrei Grigoriu
  *
+ * @author Andrei Grigoriu
  */
 public class Util {
     public static final BigDecimal etherValue = new BigDecimal(1000000000000000000L);
 
     /**
      * Converts ether to wei.
-     * 
-     * @param ether
-     *            to convert
+     *
+     * @param ether to convert
      * @return wei
      */
     public static BigInteger fromEtherToWei(int ether) {
@@ -26,9 +24,8 @@ public class Util {
 
     /**
      * Converts ether to wei.
-     * 
-     * @param ether
-     *            as BigDecimal to convert
+     *
+     * @param ether as BigDecimal to convert
      * @return wei
      */
     public static BigInteger fromEtherToWei(BigDecimal ether) {
@@ -37,9 +34,8 @@ public class Util {
 
     /**
      * Converts ether to wei.
-     * 
-     * @param ether
-     *            as float to convert
+     *
+     * @param ether as float to convert
      * @return wei
      */
     public static BigInteger fromEtherToWei(float ether) {
@@ -48,9 +44,8 @@ public class Util {
 
     /**
      * Converts wei to ether.
-     * 
-     * @param wei
-     *            to convert
+     *
+     * @param wei to convert
      * @return ether
      */
     public static BigDecimal fromWeiToEther(BigInteger wei) {

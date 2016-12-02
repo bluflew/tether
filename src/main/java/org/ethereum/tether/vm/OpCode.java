@@ -1,16 +1,9 @@
 package org.ethereum.tether.vm;
 
-import static org.ethereum.tether.vm.OpCode.Tier.BaseTier;
-import static org.ethereum.tether.vm.OpCode.Tier.ExtTier;
-import static org.ethereum.tether.vm.OpCode.Tier.HighTier;
-import static org.ethereum.tether.vm.OpCode.Tier.LowTier;
-import static org.ethereum.tether.vm.OpCode.Tier.MidTier;
-import static org.ethereum.tether.vm.OpCode.Tier.SpecialTier;
-import static org.ethereum.tether.vm.OpCode.Tier.VeryLowTier;
-import static org.ethereum.tether.vm.OpCode.Tier.ZeroTier;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.ethereum.tether.vm.OpCode.Tier.*;
 
 /**
  * Instruction set for the Ethereum Virtual Machine See Yellow Paper:
@@ -538,7 +531,7 @@ public enum OpCode {
      * (cxf1) Message-call into an account
      */
     CALL(0xf1, 7, 1, SpecialTier), // [out_data_size] [out_data_start] [in_data_size]
-                                   // [in_data_start] [value] [to_addr]
+    // [in_data_start] [value] [to_addr]
     // [gas] CALL
     /**
      * (0xf2) Calls self, but grabbing the code from the TO argument instead of from one's own
@@ -554,11 +547,6 @@ public enum OpCode {
      */
     SUICIDE(0xff, 1, 0, ZeroTier);
 
-    private final byte opcode;
-    private final int require;
-    private final Tier tier;
-    private final int ret;
-
     private static final Map<Byte, OpCode> intToTypeMap = new HashMap<>();
     private static final Map<String, Byte> stringToByteMap = new HashMap<>();
 
@@ -569,6 +557,11 @@ public enum OpCode {
         }
     }
 
+    private final byte opcode;
+    private final int require;
+    private final Tier tier;
+    private final int ret;
+
     // require = required args
     // return = required return
     private OpCode(int op, int require, int ret, Tier tier) {
@@ -576,6 +569,18 @@ public enum OpCode {
         this.require = require;
         this.tier = tier;
         this.ret = ret;
+    }
+
+    public static boolean contains(String code) {
+        return stringToByteMap.containsKey(code.trim());
+    }
+
+    public static byte byteVal(String code) {
+        return stringToByteMap.get(code);
+    }
+
+    public static OpCode code(byte code) {
+        return intToTypeMap.get(code);
     }
 
     public byte val() {
@@ -599,18 +604,6 @@ public enum OpCode {
         return opcode;
     }
 
-    public static boolean contains(String code) {
-        return stringToByteMap.containsKey(code.trim());
-    }
-
-    public static byte byteVal(String code) {
-        return stringToByteMap.get(code);
-    }
-
-    public static OpCode code(byte code) {
-        return intToTypeMap.get(code);
-    }
-
     public Tier getTier() {
         return this.tier;
     }
@@ -618,7 +611,7 @@ public enum OpCode {
     public enum Tier {
         ZeroTier(0), BaseTier(2), VeryLowTier(3), LowTier(5), MidTier(8), HighTier(10), ExtTier(
                 20), SpecialTier(1), // TODO #POC9 is this correct?? "multiparam" from cpp
-                InvalidTier(0);
+        InvalidTier(0);
 
         private final int level;
 

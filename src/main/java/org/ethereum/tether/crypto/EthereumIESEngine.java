@@ -1,20 +1,15 @@
 package org.ethereum.tether.crypto;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.math.BigInteger;
-
 import org.spongycastle.crypto.*;
 import org.spongycastle.crypto.generators.EphemeralKeyPairGenerator;
-import org.spongycastle.crypto.params.AsymmetricKeyParameter;
-import org.spongycastle.crypto.params.IESParameters;
-import org.spongycastle.crypto.params.IESWithCipherParameters;
-import org.spongycastle.crypto.params.KDFParameters;
-import org.spongycastle.crypto.params.KeyParameter;
-import org.spongycastle.crypto.params.ParametersWithIV;
+import org.spongycastle.crypto.params.*;
 import org.spongycastle.util.Arrays;
 import org.spongycastle.util.BigIntegers;
 import org.spongycastle.util.Pack;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.math.BigInteger;
 
 /**
  * Support class for constructing integrated encryption cipher for doing basic message exchanges on
@@ -42,20 +37,15 @@ public class EthereumIESEngine {
     /**
      * set up for use with stream mode, where the key derivation function is used to provide a
      * stream of bytes to xor with the message.
-     * 
-     * @param agree
-     *            the key agreement used as the basis for the encryption
-     * @param kdf
-     *            the key derivation function used for byte generation
-     * @param mac
-     *            the message authentication code generator for the message
-     * @param hash
-     *            hash ing function
-     * @param cipher
-     *            the actual cipher
+     *
+     * @param agree  the key agreement used as the basis for the encryption
+     * @param kdf    the key derivation function used for byte generation
+     * @param mac    the message authentication code generator for the message
+     * @param hash   hash ing function
+     * @param cipher the actual cipher
      */
     public EthereumIESEngine(BasicAgreement agree, DerivationFunction kdf, Mac mac, Digest hash,
-            BufferedBlockCipher cipher) {
+                             BufferedBlockCipher cipher) {
         this.agree = agree;
         this.kdf = kdf;
         this.mac = mac;
@@ -67,18 +57,14 @@ public class EthereumIESEngine {
     /**
      * Initialise the encryptor.
      *
-     * @param forEncryption
-     *            whether or not this is encryption/decryption.
-     * @param privParam
-     *            our private key parameters
-     * @param pubParam
-     *            the recipient's/sender's public key parameters
-     * @param params
-     *            encoding and derivation parameters, may be wrapped to include an IV for an
-     *            underlying block cipher.
+     * @param forEncryption whether or not this is encryption/decryption.
+     * @param privParam     our private key parameters
+     * @param pubParam      the recipient's/sender's public key parameters
+     * @param params        encoding and derivation parameters, may be wrapped to include an IV for an
+     *                      underlying block cipher.
      */
     public void init(boolean forEncryption, CipherParameters privParam, CipherParameters pubParam,
-            CipherParameters params) {
+                     CipherParameters params) {
         this.forEncryption = forEncryption;
         this.privParam = privParam;
         this.pubParam = pubParam;
@@ -90,16 +76,13 @@ public class EthereumIESEngine {
     /**
      * Initialise the encryptor.
      *
-     * @param publicKey
-     *            the recipient's/sender's public key parameters
-     * @param params
-     *            encoding and derivation parameters, may be wrapped to include an IV for an
-     *            underlying block cipher.
-     * @param ephemeralKeyPairGenerator
-     *            the ephemeral key pair generator to use.
+     * @param publicKey                 the recipient's/sender's public key parameters
+     * @param params                    encoding and derivation parameters, may be wrapped to include an IV for an
+     *                                  underlying block cipher.
+     * @param ephemeralKeyPairGenerator the ephemeral key pair generator to use.
      */
     public void init(AsymmetricKeyParameter publicKey, CipherParameters params,
-            EphemeralKeyPairGenerator ephemeralKeyPairGenerator) {
+                     EphemeralKeyPairGenerator ephemeralKeyPairGenerator) {
         this.forEncryption = true;
         this.pubParam = publicKey;
         this.keyPairGenerator = ephemeralKeyPairGenerator;
@@ -110,16 +93,13 @@ public class EthereumIESEngine {
     /**
      * Initialise the encryptor.
      *
-     * @param privateKey
-     *            the recipient's private key.
-     * @param params
-     *            encoding and derivation parameters, may be wrapped to include an IV for an
-     *            underlying block cipher.
-     * @param publicKeyParser
-     *            the parser for reading the ephemeral public key.
+     * @param privateKey      the recipient's private key.
+     * @param params          encoding and derivation parameters, may be wrapped to include an IV for an
+     *                        underlying block cipher.
+     * @param publicKeyParser the parser for reading the ephemeral public key.
      */
     public void init(AsymmetricKeyParameter privateKey, CipherParameters params,
-            KeyParser publicKeyParser) {
+                     KeyParser publicKeyParser) {
         this.forEncryption = false;
         this.privParam = privateKey;
         this.keyParser = publicKeyParser;

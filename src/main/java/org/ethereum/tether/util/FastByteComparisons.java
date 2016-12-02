@@ -6,9 +6,9 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -46,13 +46,13 @@ public abstract class FastByteComparisons {
         return LexicographicalComparerHolder.BEST_COMPARER.compareTo(b1, s1, l1, b2, s2, l2);
     }
 
-    private interface Comparer<T> {
-        abstract public int compareTo(T buffer1, int offset1, int length1, T buffer2, int offset2,
-                int length2);
-    }
-
     private static Comparer<byte[]> lexicographicalComparerJavaImpl() {
         return LexicographicalComparerHolder.PureJavaComparer.INSTANCE;
+    }
+
+    private interface Comparer<T> {
+        abstract public int compareTo(T buffer1, int offset1, int length1, T buffer2, int offset2,
+                                      int length2);
     }
 
     /**
@@ -89,7 +89,7 @@ public abstract class FastByteComparisons {
 
             @Override
             public int compareTo(byte[] buffer1, int offset1, int length1, byte[] buffer2,
-                    int offset2, int length2) {
+                                 int offset2, int length2) {
                 // Short circuit equal case
                 if (buffer1 == buffer2 && offset1 == offset2 && length1 == length2) {
                     return 0;

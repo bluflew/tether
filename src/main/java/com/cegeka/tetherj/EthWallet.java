@@ -1,42 +1,32 @@
 package com.cegeka.tetherj;
 
-import static org.ethereum.crypto.HashUtil.sha3;
+import com.cegeka.tetherj.crypto.CryptoUtil;
+import com.cegeka.tetherj.crypto.WalletStoragePojoV3;
+import org.ethereum.core.Account;
+import org.ethereum.crypto.ECKey;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.ethereum.core.Account;
-import org.ethereum.crypto.ECKey;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-
-import com.cegeka.tetherj.crypto.CryptoUtil;
-import com.cegeka.tetherj.crypto.WalletStoragePojoV3;
-
-import lombok.Getter;
-import lombok.Setter;
+import static java.time.ZoneOffset.UTC;
+import static java.time.ZonedDateTime.now;
+import static java.time.format.DateTimeFormatter.ofPattern;
+import static org.ethereum.crypto.HashUtil.sha3;
 
 /**
  * Wallet container.
- * 
- * @author Andrei Grigoriu
  *
+ * @author Andrei Grigoriu
  */
 public class EthWallet implements Serializable {
 
     private static final long serialVersionUID = -4893684742909372607L;
-
-    @Getter
-    @Setter
-    WalletStoragePojoV3 storage;
+    private static final Logger logger = LoggerFactory.getLogger(EthWallet.class);
+    private WalletStoragePojoV3 storage;
     private byte[] privateKey;
-
-    private static final Logger logger = LogManager.getLogger(EthWallet.class);
 
     public EthWallet() {
         privateKey = null;
@@ -44,9 +34,8 @@ public class EthWallet implements Serializable {
 
     /**
      * Create wallet from storage pojo.
-     * 
-     * @param storage
-     *            The storage object.
+     *
+     * @param storage The storage object.
      */
     public EthWallet(WalletStoragePojoV3 storage) {
         privateKey = null;
@@ -60,9 +49,8 @@ public class EthWallet implements Serializable {
 
     /**
      * Generate a random key pair wallet.
-     * 
-     * @param passphrase
-     *            Pass to encrypt private key with.
+     *
+     * @param passphrase Pass to encrypt private key with.
      * @return Returns the new wallet.
      */
     public static EthWallet createWallet(String passphrase) {
@@ -70,24 +58,23 @@ public class EthWallet implements Serializable {
         logger.info("Generated wallet " + wallet.getStorage().toString());
         return wallet;
     }
-    
+
     public static EthWallet createDeterministicWallet(String seed) {
         ECKey key = ECKey.fromPrivate(sha3(seed.getBytes()));
         Account account = new Account();
         account.init(key);
-        
+
         EthWallet wallet = new EthWallet();
         wallet.privateKey = key.getPrivKeyBytes();
         wallet.storage = WalletStoragePojoV3.createFromPrivateKey(wallet.privateKey);
-        
+
         return wallet;
     }
 
     /**
      * Load wallet from v3 storage json.
-     * 
-     * @param json
-     *            Json string in v3 format.
+     *
+     * @param json Json string in v3 format.
      * @return Returns the wallet.
      */
     public static EthWallet loadWalletFromString(String json) {
@@ -98,12 +85,10 @@ public class EthWallet implements Serializable {
 
     /**
      * Load wallet from file containing v3 json.
-     * 
-     * @param file
-     *            to load from, containing json string in v3 format.
+     *
+     * @param file to load from, containing json string in v3 format.
      * @return Returns the wallet.
-     * @throws IOException
-     *             In case of IO errors.
+     * @throws IOException In case of IO errors.
      */
     public static EthWallet loadWalletFromFile(File file) throws IOException {
         EthWallet wallet = new EthWallet(WalletStoragePojoV3.loadWalletFromFile(file));
@@ -113,11 +98,9 @@ public class EthWallet implements Serializable {
 
     /**
      * Write v3 storage to disk.
-     * 
-     * @param file
-     *            File to write to.
-     * @throws IOException
-     *             In case of IO errors.
+     *
+     * @param file File to write to.
+     * @throws IOException In case of IO errors.
      */
     public void writeToFile(File file) throws IOException {
         logger.debug("Write wallet to file " + file.getAbsolutePath() + " " + storage.toString());
@@ -126,7 +109,7 @@ public class EthWallet implements Serializable {
 
     /**
      * Is private key available in memory.
-     * 
+     *
      * @return Returns true if private key is decrypted.
      */
     public boolean isUnlocked() {
@@ -135,9 +118,8 @@ public class EthWallet implements Serializable {
 
     /**
      * Decrypt private key and store it in memory.
-     * 
-     * @param passphrase
-     *            Passphrase to decrypt with.
+     *
+     * @param passphrase Passphrase to decrypt with.
      * @return Returns true if succeeded.
      */
     public boolean unlock(String passphrase) {
@@ -160,7 +142,7 @@ public class EthWallet implements Serializable {
 
     /**
      * Returns private key if the wallet is unlocked.
-     * 
+     *
      * @return null if locked, hex private key otherwise.
      */
     public String getPrivateKey() {
@@ -192,14 +174,14 @@ public class EthWallet implements Serializable {
 
     /**
      * Generate ethereum client standard filename (uses current time).
-     * 
+     *
      * @return file name
      */
     public String generateStandardFilename() {
-        DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-DD'T'HH-mm-ss'.'SS");
-        DateTime now = DateTime.now(DateTimeZone.UTC);
+        return "UTC--" + now(UTC).format(ofPattern("yyyy-MM-DD'T'HH-mm-ss'.'SS")) + "--" + storage.getAddress();
+    }
 
-        String filename = "UTC--" + now.toString(fmt) + "--" + storage.getAddress();
-        return filename;
+    public WalletStoragePojoV3 getStorage() {
+        return storage;
     }
 }

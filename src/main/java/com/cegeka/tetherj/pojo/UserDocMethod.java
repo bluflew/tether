@@ -1,16 +1,21 @@
 package com.cegeka.tetherj.pojo;
 
-import java.io.Serializable;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import lombok.Data;
+import java.io.Serializable;
 
-@Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserDocMethod implements Serializable {
 
     private static final long serialVersionUID = -6808833294590633503L;
 
-    String notice;
+    private String notice;
+
+    public String getNotice() {
+        return notice;
+    }
+
+    public void setNotice(String notice) {
+        this.notice = notice;
+    }
 }

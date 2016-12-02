@@ -7,15 +7,13 @@ import java.util.Formatter;
  * Util for both crypto and decoding.
  *
  * @author Andrei Grigoriu
- *
  */
 public class CryptoUtil {
 
     /**
      * Convert bytes to hex + 0x in front.
      *
-     * @param data
-     *            to convert
+     * @param data to convert
      * @return hex string
      */
     public static String byteToHexWithPrefix(final byte[] data) {
@@ -25,8 +23,7 @@ public class CryptoUtil {
     /**
      * Convert bytes to hex without (no 0x in front).
      *
-     * @param data
-     *            to convert
+     * @param data to convert
      * @return hex strng
      */
     public static String byteToHex(final byte[] data) {
@@ -42,8 +39,7 @@ public class CryptoUtil {
     /**
      * Converts hex to bytes.
      *
-     * @param hex
-     *            to decoded (may have 0x in front)
+     * @param hex to decoded (may have 0x in front)
      * @return byte data
      */
     public static byte[] hexToBytes(String hex) {
@@ -56,8 +52,7 @@ public class CryptoUtil {
     /**
      * Converts hex to bytes.
      *
-     * @param hex
-     *            to decoded (may have 0x in front)
+     * @param hex to decoded (may have 0x in front)
      * @return byte data
      */
     public static byte[] hexToBytes(char[] hex) {
@@ -76,8 +71,7 @@ public class CryptoUtil {
     /**
      * Convert hex to BigInteger.
      *
-     * @param hex
-     *            to convert
+     * @param hex to convert
      * @return biginteger from hex
      */
     public static BigInteger hexToBigInteger(String hex) {
@@ -99,6 +93,7 @@ public class CryptoUtil {
 
     /**
      * Get associated byte for char.
+     *
      * @param ch char
      * @return byte associated with char
      */
@@ -117,6 +112,7 @@ public class CryptoUtil {
 
     /**
      * Get the address as short string.
+     *
      * @param ethereumAddress Address as big integer.
      * @return short string represent 1f21c...
      */
@@ -136,6 +132,7 @@ public class CryptoUtil {
 
     /**
      * Returns true if address is a valid ethereum address.
+     *
      * @param address to check
      * @return true if valid
      */
@@ -145,6 +142,7 @@ public class CryptoUtil {
 
     /**
      * Returns true if address is a valid ethereum address.
+     *
      * @param address to check
      * @return true if valid
      */

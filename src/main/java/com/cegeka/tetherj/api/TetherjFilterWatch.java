@@ -1,7 +1,6 @@
 package com.cegeka.tetherj.api;
 
 import com.cegeka.tetherj.EthEvent;
-import lombok.Data;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -9,7 +8,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Handle for filter watches.
  */
-@Data
 public class TetherjFilterWatch {
 
     private TetherjHandle<List<EthEvent>> watchHandle;
@@ -24,5 +22,21 @@ public class TetherjFilterWatch {
      */
     public void cancel() {
         isCancelled.set(true);
+    }
+
+    public TetherjHandle<List<EthEvent>> getWatchHandle() {
+        return watchHandle;
+    }
+
+    public void setWatchHandle(TetherjHandle<List<EthEvent>> watchHandle) {
+        this.watchHandle = watchHandle;
+    }
+
+    public AtomicBoolean getIsCancelled() {
+        return isCancelled;
+    }
+
+    public void setIsCancelled(AtomicBoolean isCancelled) {
+        this.isCancelled = isCancelled;
     }
 }

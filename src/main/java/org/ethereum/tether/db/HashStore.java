@@ -4,8 +4,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-import org.ethereum.tether.db.DiskStore;
-
 /**
  * @author Mikhail Kalinin
  * @since 09.07.2015

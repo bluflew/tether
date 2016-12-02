@@ -1,7 +1,5 @@
 package org.ethereum.tether.util;
 
-import org.ethereum.tether.util.RLPElement;
-
 /**
  * @author Roman Mandeleil
  * @since 21.04.14
@@ -9,7 +7,7 @@ import org.ethereum.tether.util.RLPElement;
 public class RLPItem implements RLPElement {
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 4570267401757053497L;
     private final byte[] rlpData;

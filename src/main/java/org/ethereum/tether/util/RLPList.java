@@ -2,9 +2,6 @@ package org.ethereum.tether.util;
 
 import java.util.ArrayList;
 
-import org.ethereum.tether.util.ByteUtil;
-import org.ethereum.tether.util.RLPElement;
-
 /**
  * @author Roman Mandeleil
  * @since 21.04.14
@@ -12,18 +9,10 @@ import org.ethereum.tether.util.RLPElement;
 public class RLPList extends ArrayList<RLPElement> implements RLPElement {
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 4295342919763885324L;
     byte[] rlpData;
-
-    public void setRLPData(byte[] rlpData) {
-        this.rlpData = rlpData;
-    }
-
-    public byte[] getRLPData() {
-        return rlpData;
-    }
 
     public static void recursivePrint(RLPElement element) {
 
@@ -40,5 +29,13 @@ public class RLPList extends ArrayList<RLPElement> implements RLPElement {
             String hex = ByteUtil.toHexString(element.getRLPData());
             System.out.print(hex + ", ");
         }
+    }
+
+    public byte[] getRLPData() {
+        return rlpData;
+    }
+
+    public void setRLPData(byte[] rlpData) {
+        this.rlpData = rlpData;
     }
 }

@@ -1,7 +1,7 @@
 package org.ethereum.tether.util;
 
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,7 +9,7 @@ import java.util.Properties;
 
 public class BuildInfo {
 
-    private static final Logger logger = LogManager.getLogger("general");
+    private static final Logger logger = LoggerFactory.getLogger("general");
 
     public static void printInfo() {
         try {

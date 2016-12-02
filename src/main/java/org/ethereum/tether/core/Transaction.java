@@ -1,14 +1,5 @@
 package org.ethereum.tether.core;
 
-import static org.ethereum.tether.util.ByteUtil.EMPTY_BYTE_ARRAY;
-import static org.ethereum.tether.util.ByteUtil.ZERO_BYTE_ARRAY;
-
-import java.math.BigInteger;
-import java.security.SignatureException;
-import java.util.Arrays;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.ethereum.tether.crypto.ECKey;
 import org.ethereum.tether.crypto.ECKey.ECDSASignature;
 import org.ethereum.tether.crypto.ECKey.MissingPrivateKeyException;
@@ -17,8 +8,17 @@ import org.ethereum.tether.util.ByteUtil;
 import org.ethereum.tether.util.RLP;
 import org.ethereum.tether.util.RLPList;
 import org.ethereum.tether.vm.GasCost;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.spongycastle.util.BigIntegers;
 import org.spongycastle.util.encoders.Hex;
+
+import java.math.BigInteger;
+import java.security.SignatureException;
+import java.util.Arrays;
+
+import static org.ethereum.tether.util.ByteUtil.EMPTY_BYTE_ARRAY;
+import static org.ethereum.tether.util.ByteUtil.ZERO_BYTE_ARRAY;
 
 /**
  * A transaction (formally, T) is a single cryptographically signed instruction sent by an actor
@@ -29,53 +29,43 @@ import org.spongycastle.util.encoders.Hex;
  */
 public class Transaction {
 
-    private static final Logger logger = LogManager.getLogger(Transaction.class);
+    private static final Logger logger = LoggerFactory.getLogger(Transaction.class);
     private static final BigInteger DEFAULT_GAS_PRICE = new BigInteger("10000000000000");
     private static final BigInteger DEFAULT_BALANCE_GAS = new BigInteger("21000");
-
+    protected byte[] sendAddress;
+    /* Tx in encoded form */
+    protected byte[] rlpEncoded;
     /* SHA3 hash of the RLP encoded transaction */
     private byte[] hash;
-
     /*
      * a counter used to make sure each transaction can only be processed once
      */
     private byte[] nonce;
-
     /* the amount of ether to transfer (calculated as wei) */
     private byte[] value;
-
     /*
      * the address of the destination account In creation transaction the receive address is - 0
      */
     private byte[] receiveAddress;
-
     /*
      * the amount of ether to pay as a transaction fee to the miner for each unit of gas
      */
     private byte[] gasPrice;
-
     /*
      * the amount of "gas" to allow for the computation. Gas is the fuel of the computational
      * engine; every computational step taken and every byte added to the state or transaction list
      * consumes some gas.
      */
     private byte[] gasLimit;
-
     /*
      * An unlimited size byte array specifying input [data] of the message call or Initialization
      * code for a new contract
      */
     private byte[] data;
-
     /*
      * the elliptic curve signature (including public key recovery bits)
      */
     private ECDSASignature signature;
-
-    protected byte[] sendAddress;
-
-    /* Tx in encoded form */
-    protected byte[] rlpEncoded;
     private byte[] rlpRaw;
     /*
      * Indicates if this transaction has been parsed from the RLP-encoded data
@@ -93,7 +83,7 @@ public class Transaction {
      * s) ].
      */
     public Transaction(byte[] nonce, byte[] gasPrice, byte[] gasLimit, byte[] receiveAddress,
-            byte[] value, byte[] data) {
+                       byte[] value, byte[] data) {
         this.nonce = nonce;
         this.gasPrice = gasPrice;
         this.gasLimit = gasLimit;
@@ -109,12 +99,32 @@ public class Transaction {
     }
 
     public Transaction(byte[] nonce, byte[] gasPrice, byte[] gasLimit, byte[] receiveAddress,
-            byte[] value, byte[] data, byte[] r, byte[] s, byte v) {
+                       byte[] value, byte[] data, byte[] r, byte[] s, byte v) {
         this(nonce, gasPrice, gasLimit, receiveAddress, value, data);
 
         ECDSASignature signature = new ECDSASignature(new BigInteger(r), new BigInteger(s));
         signature.v = v;
         this.signature = signature;
+    }
+
+    public static Transaction createDefault(String to, BigInteger amount, BigInteger nonce) {
+        return create(to, amount, nonce, DEFAULT_GAS_PRICE, DEFAULT_BALANCE_GAS);
+    }
+
+    public static Transaction create(String to, BigInteger amount, BigInteger nonce,
+                                     BigInteger gasPrice, BigInteger gasLimit) {
+        return new Transaction(BigIntegers.asUnsignedByteArray(nonce),
+                BigIntegers.asUnsignedByteArray(gasPrice),
+                BigIntegers.asUnsignedByteArray(gasLimit), Hex.decode(to),
+                BigIntegers.asUnsignedByteArray(amount), null);
+    }
+
+    public static Transaction create(String to, BigInteger amount, BigInteger nonce,
+                                     BigInteger gasPrice, BigInteger gasLimit, byte[] data) {
+        return new Transaction(BigIntegers.asUnsignedByteArray(nonce),
+                BigIntegers.asUnsignedByteArray(gasPrice),
+                BigIntegers.asUnsignedByteArray(gasLimit), Hex.decode(to),
+                BigIntegers.asUnsignedByteArray(amount), data);
     }
 
     public long transactionCost() {
@@ -236,6 +246,10 @@ public class Transaction {
         return data;
     }
 
+    /*
+     * Crypto
+     */
+
     public ECDSASignature getSignature() {
         if (!parsed)
             rlpParse();
@@ -254,10 +268,6 @@ public class Transaction {
         return this.receiveAddress == null
                 || Arrays.equals(this.receiveAddress, ByteUtil.EMPTY_BYTE_ARRAY);
     }
-
-    /*
-     * Crypto
-     */
 
     public ECKey getKey() {
         byte[] hash = getRawHash();
@@ -295,9 +305,9 @@ public class Transaction {
                 + ", data=" + ByteUtil.toHexString(data) + ", signatureV="
                 + (signature == null ? "" : signature.v) + ", signatureR="
                 + (signature == null ? ""
-                        : ByteUtil.toHexString(BigIntegers.asUnsignedByteArray(signature.r)))
+                : ByteUtil.toHexString(BigIntegers.asUnsignedByteArray(signature.r)))
                 + ", signatureS=" + (signature == null ? ""
-                        : ByteUtil.toHexString(BigIntegers.asUnsignedByteArray(signature.s)))
+                : ByteUtil.toHexString(BigIntegers.asUnsignedByteArray(signature.s)))
                 + "]";
     }
 
@@ -387,25 +397,5 @@ public class Transaction {
         Transaction tx = (Transaction) obj;
 
         return tx.hashCode() == this.hashCode();
-    }
-
-    public static Transaction createDefault(String to, BigInteger amount, BigInteger nonce) {
-        return create(to, amount, nonce, DEFAULT_GAS_PRICE, DEFAULT_BALANCE_GAS);
-    }
-
-    public static Transaction create(String to, BigInteger amount, BigInteger nonce,
-            BigInteger gasPrice, BigInteger gasLimit) {
-        return new Transaction(BigIntegers.asUnsignedByteArray(nonce),
-                BigIntegers.asUnsignedByteArray(gasPrice),
-                BigIntegers.asUnsignedByteArray(gasLimit), Hex.decode(to),
-                BigIntegers.asUnsignedByteArray(amount), null);
-    }
-
-    public static Transaction create(String to, BigInteger amount, BigInteger nonce,
-            BigInteger gasPrice, BigInteger gasLimit, byte[] data) {
-        return new Transaction(BigIntegers.asUnsignedByteArray(nonce),
-                BigIntegers.asUnsignedByteArray(gasPrice),
-                BigIntegers.asUnsignedByteArray(gasLimit), Hex.decode(to),
-                BigIntegers.asUnsignedByteArray(amount), data);
     }
 }

@@ -2,12 +2,9 @@
 
 package org.ethereum.tether.crypto.cryptohash;
 
-import org.ethereum.tether.crypto.cryptohash.Digest;
-import org.ethereum.tether.crypto.cryptohash.DigestEngine;
-
 /**
  * This class implements the core operations for the Keccak digest algorithm.
- *
+ * <p>
  * <pre>
  * ==========================(LICENSE BEGIN)============================
  *
@@ -35,36 +32,32 @@ import org.ethereum.tether.crypto.cryptohash.DigestEngine;
  * ===========================(LICENSE END)=============================
  * </pre>
  *
- * @version $Revision: 258 $
  * @author Thomas Pornin &lt;thomas.pornin@cryptolog.com&gt;
+ * @version $Revision: 258 $
  */
 
 abstract class KeccakCore extends DigestEngine {
 
-    KeccakCore() {
-    }
-
-    private long[] A;
-    private byte[] tmpOut;
-
-    private static final long[] RC = { 0x0000000000000001L, 0x0000000000008082L,
+    private static final long[] RC = {0x0000000000000001L, 0x0000000000008082L,
             0x800000000000808AL, 0x8000000080008000L, 0x000000000000808BL, 0x0000000080000001L,
             0x8000000080008081L, 0x8000000000008009L, 0x000000000000008AL, 0x0000000000000088L,
             0x0000000080008009L, 0x000000008000000AL, 0x000000008000808BL, 0x800000000000008BL,
             0x8000000000008089L, 0x8000000000008003L, 0x8000000000008002L, 0x8000000000000080L,
             0x000000000000800AL, 0x800000008000000AL, 0x8000000080008081L, 0x8000000000008080L,
-            0x0000000080000001L, 0x8000000080008008L };
+            0x0000000080000001L, 0x8000000080008008L};
+    private long[] A;
+    private byte[] tmpOut;
+
+    KeccakCore() {
+    }
 
     /**
      * Encode the 64-bit word {@code val} into the array {@code buf} at offset {@code off}, in
      * little-endian convention (least significant byte first).
      *
-     * @param val
-     *            the value to encode
-     * @param buf
-     *            the destination buffer
-     * @param off
-     *            the destination offset
+     * @param val the value to encode
+     * @param buf the destination buffer
+     * @param off the destination offset
      */
     private static final void encodeLELong(long val, byte[] buf, int off) {
         buf[off + 0] = (byte) val;
@@ -80,10 +73,8 @@ abstract class KeccakCore extends DigestEngine {
     /**
      * Decode a 64-bit little-endian word from the array {@code buf} at offset {@code off}.
      *
-     * @param buf
-     *            the source buffer
-     * @param off
-     *            the source offset
+     * @param buf the source buffer
+     * @param off the source offset
      * @return the decoded value
      */
     private static final long decodeLELong(byte[] buf, int off) {
@@ -93,12 +84,16 @@ abstract class KeccakCore extends DigestEngine {
                 | ((buf[off + 6] & 0xFFL) << 48) | ((buf[off + 7] & 0xFFL) << 56);
     }
 
-    /** @see org.ethereum.tether.crypto.cryptohash.DigestEngine */
+    /**
+     * @see org.ethereum.tether.crypto.cryptohash.DigestEngine
+     */
     protected void engineReset() {
         doReset();
     }
 
-    /** @see org.ethereum.tether.crypto.cryptohash.DigestEngine */
+    /**
+     * @see org.ethereum.tether.crypto.cryptohash.DigestEngine
+     */
     protected void processBlock(byte[] data) {
         /* Input block */
         for (int i = 0; i < data.length; i += 8)
@@ -506,7 +501,9 @@ abstract class KeccakCore extends DigestEngine {
         }
     }
 
-    /** @see org.ethereum.tether.crypto.cryptohash.DigestEngine */
+    /**
+     * @see org.ethereum.tether.crypto.cryptohash.DigestEngine
+     */
     protected void doPadding(byte[] out, int off) {
         int ptr = flush();
         byte[] buf = getBlockBuffer();
@@ -531,14 +528,18 @@ abstract class KeccakCore extends DigestEngine {
         System.arraycopy(tmpOut, 0, out, off, dlen);
     }
 
-    /** @see org.ethereum.tether.crypto.cryptohash.DigestEngine */
+    /**
+     * @see org.ethereum.tether.crypto.cryptohash.DigestEngine
+     */
     protected void doInit() {
         A = new long[25];
         tmpOut = new byte[(getDigestLength() + 7) & ~7];
         doReset();
     }
 
-    /** @see org.ethereum.tether.crypto.cryptohash.Digest */
+    /**
+     * @see org.ethereum.tether.crypto.cryptohash.Digest
+     */
     public int getBlockLength() {
         return 200 - 2 * getDigestLength();
     }
@@ -554,13 +555,17 @@ abstract class KeccakCore extends DigestEngine {
         A[20] = 0xFFFFFFFFFFFFFFFFL;
     }
 
-    /** @see org.ethereum.tether.crypto.cryptohash.DigestEngine */
+    /**
+     * @see org.ethereum.tether.crypto.cryptohash.DigestEngine
+     */
     protected Digest copyState(KeccakCore dst) {
         System.arraycopy(A, 0, dst.A, 0, 25);
         return super.copyState(dst);
     }
 
-    /** @see org.ethereum.tether.crypto.cryptohash.Digest */
+    /**
+     * @see org.ethereum.tether.crypto.cryptohash.Digest
+     */
     public String toString() {
         return "Keccak-" + (getDigestLength() << 3);
     }

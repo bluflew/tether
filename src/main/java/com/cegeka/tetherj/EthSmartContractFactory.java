@@ -1,25 +1,23 @@
 package com.cegeka.tetherj;
 
+import com.cegeka.tetherj.crypto.CryptoUtil;
+import com.cegeka.tetherj.pojo.ContractAbiMethod;
+import com.cegeka.tetherj.pojo.ContractData;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.ethereum.tether.core.CallTransaction.Function;
+import org.ethereum.tether.util.ByteUtil;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.Collection;
 import java.util.HashMap;
 
-import org.ethereum.tether.core.CallTransaction.Function;
-import org.ethereum.tether.util.ByteUtil;
-
-import com.cegeka.tetherj.crypto.CryptoUtil;
-import com.cegeka.tetherj.pojo.ContractAbiMethod;
-import com.cegeka.tetherj.pojo.ContractData;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 /**
  * Factory to instantiate contracts on the chain and access existing ones.
  *
  * @author Andrei Grigoriu
- *
  */
 public class EthSmartContractFactory implements Serializable {
     /**
@@ -36,8 +34,7 @@ public class EthSmartContractFactory implements Serializable {
     /**
      * Construct factory by contract data.
      *
-     * @param contract
-     *            Contract data to use for this factory
+     * @param contract Contract data to use for this factory
      */
     public EthSmartContractFactory(ContractData contract) {
         this.contract = contract;
@@ -102,15 +99,13 @@ public class EthSmartContractFactory implements Serializable {
     /**
      * Set contract data.
      *
-     * @param contract
-     *            Contract data to set.
+     * @param contract Contract data to set.
      */
     public void setContract(ContractData contract) {
         this.contract = contract;
     }
 
     /**
-     *
      * @return Returns contract data as json string. Use this for storage purposes.
      */
     public String getContractDataAsString() {
@@ -133,8 +128,7 @@ public class EthSmartContractFactory implements Serializable {
     /**
      * Creates a transaction that will create a contract instance.
      *
-     * @param args
-     *            for the contract constructor
+     * @param args for the contract constructor
      * @return Returns transaction to sign and submit to your service.
      */
     public EthTransaction createContract(Object... args) {
@@ -149,8 +143,7 @@ public class EthSmartContractFactory implements Serializable {
     /**
      * Factory method to create a smart contract handle for a contract on your chain.
      *
-     * @param contractAddress
-     *            Contract address on the blockchain.
+     * @param contractAddress Contract address on the blockchain.
      * @return Returns the smart contract handle
      */
     public EthSmartContract getContract(String contractAddress) {
@@ -200,8 +193,7 @@ public class EthSmartContractFactory implements Serializable {
     /**
      * Return a constant function handle for this contract.
      *
-     * @param method
-     *            Method name.
+     * @param method Method name.
      * @return Returns the requested constant function.
      */
     public Function getConstantFunction(String method) {
@@ -214,8 +206,7 @@ public class EthSmartContractFactory implements Serializable {
     /**
      * Return a modifier function handle for this contract.
      *
-     * @param method
-     *            Method name.
+     * @param method Method name.
      * @return Returns the requested modifier function.
      */
     public Function getModFunction(String method) {
@@ -228,8 +219,7 @@ public class EthSmartContractFactory implements Serializable {
     /**
      * Return an event function handle for this contract.
      *
-     * @param event
-     *            Event name.
+     * @param event Event name.
      * @return Returns the requested event function.
      */
     public Function getEventFunction(String event) {

@@ -1,16 +1,12 @@
 package org.ethereum.tether.util;
 
+import com.cedarsoftware.util.DeepEquals;
+import org.ethereum.tether.crypto.HashUtil;
+import org.spongycastle.util.encoders.Hex;
+
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
-
-import org.ethereum.tether.crypto.HashUtil;
-import org.ethereum.tether.util.ByteUtil;
-import org.ethereum.tether.util.CompactEncoder;
-import org.ethereum.tether.util.RLP;
-import org.spongycastle.util.encoders.Hex;
-
-import com.cedarsoftware.util.DeepEquals;
 
 /**
  * Class to encapsulate an object and provide utilities for conversion
@@ -23,21 +19,7 @@ public class Value {
 
     private boolean decoded = false;
 
-    public static Value fromRlpEncoded(byte[] data) {
-
-        if (data != null && data.length != 0) {
-            Value v = new Value();
-            v.init(data);
-            return v;
-        }
-        return null;
-    }
-
     public Value() {
-    }
-
-    public void init(byte[] rlp) {
-        this.rlp = rlp;
     }
 
     public Value(Object obj) {
@@ -51,6 +33,20 @@ public class Value {
         } else {
             this.value = obj;
         }
+    }
+
+    public static Value fromRlpEncoded(byte[] data) {
+
+        if (data != null && data.length != 0) {
+            Value v = new Value();
+            v.init(data);
+            return v;
+        }
+        return null;
+    }
+
+    public void init(byte[] rlp) {
+        this.rlp = rlp;
     }
 
     /*

@@ -83,7 +83,7 @@ public class SHA3Helper {
     }
 
     private static byte[] sha3(byte[] message, int start, int length, SHA3Digest digest,
-            boolean bouncyencoder) {
+                               boolean bouncyencoder) {
         byte[] hash = new byte[digest.getDigestSize()];
 
         if (message.length != 0) {

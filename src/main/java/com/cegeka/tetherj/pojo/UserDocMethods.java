@@ -1,10 +1,10 @@
 package com.cegeka.tetherj.pojo;
 
-import java.io.Serializable;
-import java.util.HashMap;
-
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
+
+import java.io.Serializable;
+import java.util.HashMap;
 
 public class UserDocMethods implements Serializable {
 

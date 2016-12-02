@@ -10,7 +10,7 @@ package org.ethereum.tether.crypto.cryptohash;
  * with reduced Java implementations such as J2ME. Implementing a {@code java.security.Provider}
  * compatible with Sun's JCA ought to be easy.
  * </p>
- *
+ * <p>
  * <p>
  * A {@code Digest} object maintains a running state for a hash function computation. Data is
  * inserted with {@code update()} calls; the result is obtained from a {@code digest()} method
@@ -19,12 +19,12 @@ package org.ethereum.tether.crypto.cryptohash;
  * state of a computation can be cloned with the {@link #copy} method; this can be used to get a
  * partial hash result without interrupting the complete computation.
  * </p>
- *
+ * <p>
  * <p>
  * {@code Digest} objects are stateful and hence not thread-safe; however, distinct {@code Digest}
  * objects can be accessed concurrently without any problem.
  * </p>
- *
+ * <p>
  * <pre>
  * ==========================(LICENSE BEGIN)============================
  *
@@ -52,8 +52,8 @@ package org.ethereum.tether.crypto.cryptohash;
  * ===========================(LICENSE END)=============================
  * </pre>
  *
- * @version $Revision: 232 $
  * @author Thomas Pornin &lt;thomas.pornin@cryptolog.com&gt;
+ * @version $Revision: 232 $
  */
 
 public interface Digest {
@@ -61,28 +61,23 @@ public interface Digest {
     /**
      * Insert one more input data byte.
      *
-     * @param in
-     *            the input byte
+     * @param in the input byte
      */
     public void update(byte in);
 
     /**
      * Insert some more bytes.
      *
-     * @param inbuf
-     *            the data bytes
+     * @param inbuf the data bytes
      */
     public void update(byte[] inbuf);
 
     /**
      * Insert some more bytes.
      *
-     * @param inbuf
-     *            the data buffer
-     * @param off
-     *            the data offset in {@code inbuf}
-     * @param len
-     *            the data length (in bytes)
+     * @param inbuf the data buffer
+     * @param off   the data offset in {@code inbuf}
+     * @param len   the data length (in bytes)
      */
     public void update(byte[] inbuf, int off, int len);
 
@@ -98,8 +93,7 @@ public interface Digest {
      * Input some bytes, then finalize the current hash computation and return the hash value in a
      * newly-allocated array. The object is resetted.
      *
-     * @param inbuf
-     *            the input data
+     * @param inbuf the input data
      * @return the hash output
      */
     public byte[] digest(byte[] inbuf);
@@ -111,12 +105,9 @@ public interface Digest {
      * smaller than the natural hash output length, the hash output is truncated to its first
      * {@code len} bytes. The object is resetted.
      *
-     * @param outbuf
-     *            the output buffer
-     * @param off
-     *            the output offset within {@code outbuf}
-     * @param len
-     *            the requested hash output length (in bytes)
+     * @param outbuf the output buffer
+     * @param off    the output offset within {@code outbuf}
+     * @param len    the requested hash output length (in bytes)
      * @return the number of bytes actually written in {@code outbuf}
      */
     public int digest(byte[] outbuf, int off, int len);
@@ -148,7 +139,7 @@ public interface Digest {
      * <a href="http://tools.ietf.org/html/rfc2104">HMAC specification</a> names the "{@code B}"
      * parameter).
      * </p>
-     *
+     * <p>
      * <p>
      * If the function is "block-less" then this function may return {@code -n} where {@code n} is
      * an integer such that the block length for HMAC ("{@code B}") will be inferred from the key

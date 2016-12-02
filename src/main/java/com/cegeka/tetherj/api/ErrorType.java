@@ -2,9 +2,8 @@ package com.cegeka.tetherj.api;
 
 /**
  * Tetherj error types.
- * 
- * @author Andrei Grigoriu
  *
+ * @author Andrei Grigoriu
  */
 public enum ErrorType {
     /* !< blockchain client is not responding correctly or offline */

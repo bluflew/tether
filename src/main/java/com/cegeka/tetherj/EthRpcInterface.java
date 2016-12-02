@@ -1,23 +1,16 @@
 package com.cegeka.tetherj;
 
+import com.cegeka.tetherj.pojo.*;
+import com.googlecode.jsonrpc4j.JsonRpcMethod;
+
 import java.math.BigInteger;
 import java.util.List;
-
-import com.cegeka.tetherj.pojo.Block;
-import com.cegeka.tetherj.pojo.CompileOutput;
-import com.cegeka.tetherj.pojo.FilterLogObject;
-import com.cegeka.tetherj.pojo.FilterLogRequest;
-import com.cegeka.tetherj.pojo.Transaction;
-import com.cegeka.tetherj.pojo.TransactionCall;
-import com.cegeka.tetherj.pojo.TransactionReceipt;
-import com.googlecode.jsonrpc4j.JsonRpcMethod;
 
 /**
  * Rpc Interface to use by json rpc invoker. All methods defined as per ethereum rpc standard.
  * https://github.com/ethereum/wiki/wiki/JSON-RPC
  *
  * @author Andrei Grigoriu
- *
  */
 public interface EthRpcInterface {
     String eth_getBalance(String address, String tag);
@@ -56,17 +49,17 @@ public interface EthRpcInterface {
     List<String> eth_getFilterChangesTransactions(String filterId);
 
     List<FilterLogObject> eth_getFilterLogs(String filterId);
-    
+
     String eth_newBlockFilter();
 
     boolean eth_uninstallFilter(String id);
 
     boolean miner_start();
-    
+
     boolean miner_stop();
-    
+
     boolean miner_setEtherbase(String coinBase) throws Exception;
-    
+
     /**
      * Experimental, remote unlocking.
      */

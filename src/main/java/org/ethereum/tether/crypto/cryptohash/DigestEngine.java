@@ -2,15 +2,13 @@
 
 package org.ethereum.tether.crypto.cryptohash;
 
-import org.ethereum.tether.crypto.cryptohash.Digest;
-
 /**
  * <p>
  * This class is a template which can be used to implement hash functions. It takes care of some of
  * the API, and also provides an internal data buffer whose length is equal to the hash function
  * internal block length.
  * </p>
- *
+ * <p>
  * <p>
  * Classes which use this template MUST provide a working {@link #getBlockLength} method even before
  * initialization (alternatively, they may define a custom {@link #getInternalBlockLength} which
@@ -18,7 +16,7 @@ import org.ethereum.tether.crypto.cryptohash.Digest;
  * from the beginning, but it is acceptable that it returns 0 while the {@link #doInit} method has
  * not been called yet.
  * </p>
- *
+ * <p>
  * <pre>
  * ==========================(LICENSE BEGIN)============================
  *
@@ -46,43 +44,11 @@ import org.ethereum.tether.crypto.cryptohash.Digest;
  * ===========================(LICENSE END)=============================
  * </pre>
  *
- * @version $Revision: 229 $
  * @author Thomas Pornin &lt;thomas.pornin@cryptolog.com&gt;
+ * @version $Revision: 229 $
  */
 
 public abstract class DigestEngine implements Digest {
-
-    /**
-     * Reset the hash algorithm state.
-     */
-    protected abstract void engineReset();
-
-    /**
-     * Process one block of data.
-     *
-     * @param data
-     *            the data block
-     */
-    protected abstract void processBlock(byte[] data);
-
-    /**
-     * Perform the final padding and store the result in the provided buffer. This method shall call
-     * {@link #flush} and then {@link #update} with the appropriate padding data in order to get the
-     * full input data.
-     *
-     * @param buf
-     *            the output buffer
-     * @param off
-     *            the output offset
-     */
-    protected abstract void doPadding(byte[] buf, int off);
-
-    /**
-     * This function is called at object creation time; the implementation should use it to perform
-     * initialization tasks. After this method is called, the implementation should be ready to
-     * process data or meaningfully honour calls such as {@link #getDigestLength}
-     */
-    protected abstract void doInit();
 
     private int digestLen, blockLen, inputLen;
     private byte[] inputBuf, outputBuf;
@@ -101,6 +67,35 @@ public abstract class DigestEngine implements Digest {
         blockCount = 0;
     }
 
+    /**
+     * Reset the hash algorithm state.
+     */
+    protected abstract void engineReset();
+
+    /**
+     * Process one block of data.
+     *
+     * @param data the data block
+     */
+    protected abstract void processBlock(byte[] data);
+
+    /**
+     * Perform the final padding and store the result in the provided buffer. This method shall call
+     * {@link #flush} and then {@link #update} with the appropriate padding data in order to get the
+     * full input data.
+     *
+     * @param buf the output buffer
+     * @param off the output offset
+     */
+    protected abstract void doPadding(byte[] buf, int off);
+
+    /**
+     * This function is called at object creation time; the implementation should use it to perform
+     * initialization tasks. After this method is called, the implementation should be ready to
+     * process data or meaningfully honour calls such as {@link #getDigestLength}
+     */
+    protected abstract void doInit();
+
     private void adjustDigestLen() {
         if (digestLen == 0) {
             digestLen = getDigestLength();
@@ -108,7 +103,9 @@ public abstract class DigestEngine implements Digest {
         }
     }
 
-    /** @see org.ethereum.tether.crypto.cryptohash.Digest */
+    /**
+     * @see org.ethereum.tether.crypto.cryptohash.Digest
+     */
     public byte[] digest() {
         adjustDigestLen();
         byte[] result = new byte[digestLen];
@@ -116,13 +113,17 @@ public abstract class DigestEngine implements Digest {
         return result;
     }
 
-    /** @see org.ethereum.tether.crypto.cryptohash.Digest */
+    /**
+     * @see org.ethereum.tether.crypto.cryptohash.Digest
+     */
     public byte[] digest(byte[] input) {
         update(input, 0, input.length);
         return digest();
     }
 
-    /** @see org.ethereum.tether.crypto.cryptohash.Digest */
+    /**
+     * @see org.ethereum.tether.crypto.cryptohash.Digest
+     */
     public int digest(byte[] buf, int offset, int len) {
         adjustDigestLen();
         if (len >= digestLen) {
@@ -137,14 +138,18 @@ public abstract class DigestEngine implements Digest {
         }
     }
 
-    /** @see org.ethereum.tether.crypto.cryptohash.Digest */
+    /**
+     * @see org.ethereum.tether.crypto.cryptohash.Digest
+     */
     public void reset() {
         engineReset();
         inputLen = 0;
         blockCount = 0;
     }
 
-    /** @see org.ethereum.tether.crypto.cryptohash.Digest */
+    /**
+     * @see org.ethereum.tether.crypto.cryptohash.Digest
+     */
     public void update(byte input) {
         inputBuf[inputLen++] = (byte) input;
         if (inputLen == blockLen) {
@@ -154,12 +159,16 @@ public abstract class DigestEngine implements Digest {
         }
     }
 
-    /** @see org.ethereum.tether.crypto.cryptohash.Digest */
+    /**
+     * @see org.ethereum.tether.crypto.cryptohash.Digest
+     */
     public void update(byte[] input) {
         update(input, 0, input.length);
     }
 
-    /** @see org.ethereum.tether.crypto.cryptohash.Digest */
+    /**
+     * @see org.ethereum.tether.crypto.cryptohash.Digest
+     */
     public void update(byte[] input, int offset, int len) {
         while (len > 0) {
             int copyLen = blockLen - inputLen;
@@ -228,8 +237,7 @@ public abstract class DigestEngine implements Digest {
      * {@code DigestEngine}. It returns a reference to the copy. This method is intended to be
      * called by the implementation of the {@link #copy} method.
      *
-     * @param dest
-     *            the copy
+     * @param dest the copy
      * @return the value {@code dest}
      */
     protected Digest copyState(DigestEngine dest) {

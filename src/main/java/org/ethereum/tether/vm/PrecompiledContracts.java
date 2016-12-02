@@ -3,7 +3,6 @@ package org.ethereum.tether.vm;
 import org.ethereum.tether.crypto.ECKey;
 import org.ethereum.tether.crypto.HashUtil;
 import org.ethereum.tether.util.ByteUtil;
-import org.ethereum.tether.vm.DataWord;
 
 /**
  * @author Roman Mandeleil

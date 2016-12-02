@@ -7,27 +7,22 @@ package com.cegeka.tetherj.crypto;
  * 
  */
 
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
 
 public class Pbkdf2 {
     /* START RFC 2898 IMPLEMENTATION */
 
     /**
      * Derive a key.
-     * 
-     * @param password
-     *            password from which to derive a key.
-     * @param salt
-     *            Salt for the derivation.
-     * @param iterations
-     *            Number of iterations.
-     * @param keyLength
-     *            Derived key length.
+     *
+     * @param password   password from which to derive a key.
+     * @param salt       Salt for the derivation.
+     * @param iterations Number of iterations.
+     * @param keyLength  Derived key length.
      * @return Returns the derived key.
      */
     public static byte[] derive(String password, byte[] salt, int iterations, int keyLength) {

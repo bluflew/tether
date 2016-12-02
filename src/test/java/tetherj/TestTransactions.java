@@ -1,17 +1,16 @@
 package tetherj;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
-import java.io.IOException;
-import java.math.BigInteger;
-
-import org.junit.Test;
-
 import com.cegeka.tetherj.EthSignedTransaction;
 import com.cegeka.tetherj.EthTransaction;
 import com.cegeka.tetherj.EthWallet;
 import com.cegeka.tetherj.api.WalletLockedException;
+import org.junit.Test;
+
+import java.io.IOException;
+import java.math.BigInteger;
+
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class TestTransactions {
 

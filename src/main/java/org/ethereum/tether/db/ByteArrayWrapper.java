@@ -1,10 +1,10 @@
 package org.ethereum.tether.db;
 
-import java.io.Serializable;
-import java.util.Arrays;
-
 import org.ethereum.tether.util.FastByteComparisons;
 import org.spongycastle.util.encoders.Hex;
+
+import java.io.Serializable;
+import java.util.Arrays;
 
 /**
  * @author Roman Mandeleil
@@ -13,7 +13,7 @@ import org.spongycastle.util.encoders.Hex;
 public class ByteArrayWrapper implements Comparable<ByteArrayWrapper>, Serializable {
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = -4940769515293188832L;
     private final byte[] data;

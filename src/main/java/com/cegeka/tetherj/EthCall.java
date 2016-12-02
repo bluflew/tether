@@ -1,14 +1,13 @@
 package com.cegeka.tetherj;
 
-import java.math.BigInteger;
-
 import com.cegeka.tetherj.pojo.TransactionCall;
+
+import java.math.BigInteger;
 
 /**
  * Call or DryCall container for function executions.
- * 
- * @author Andrei Grigoriu
  *
+ * @author Andrei Grigoriu
  */
 public class EthCall {
 
@@ -27,9 +26,8 @@ public class EthCall {
 
     /**
      * Set a new gas limit for this call (to simulate gas).
-     * 
-     * @param gasLimit
-     *            Gas limit value to set.
+     *
+     * @param gasLimit Gas limit value to set.
      */
     public void setGasLimit(BigInteger gasLimit) {
         call.setGas("0x" + gasLimit.toString(16));
@@ -37,9 +35,8 @@ public class EthCall {
 
     /**
      * Set a new from address, to simulate privileges (usually).
-     * 
-     * @param from
-     *            Ethereum from address to set.
+     *
+     * @param from Ethereum from address to set.
      */
     public void setFrom(String from) {
         call.setFrom(from);
@@ -47,9 +44,8 @@ public class EthCall {
 
     /**
      * Set a new from address, to simulate privileges (usually)/
-     * 
-     * @param from
-     *            Ethereum from address to set, retrieved from wallet.
+     *
+     * @param from Ethereum from address to set, retrieved from wallet.
      */
     public void setFrom(EthWallet from) {
         call.setFrom(from.getAddress());
@@ -57,11 +53,10 @@ public class EthCall {
 
     /**
      * Decode output received from ethereum client.
-     * 
-     * @param output
-     *            Output data received from ethereum client.
+     *
+     * @param output Output data received from ethereum client.
      * @return Output data decoded into an array of Objects, the objects can be casted to known java
-     *         types such BigInteger for quantity types, String for string etc.
+     * types such BigInteger for quantity types, String for string etc.
      */
     public Object[] decodeOutput(String output) {
         return call.decodeOutput(output);

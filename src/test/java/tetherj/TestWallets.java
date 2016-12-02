@@ -1,19 +1,5 @@
 package tetherj;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutput;
-import java.io.ObjectOutputStream;
-import java.math.BigInteger;
-
-import org.junit.Test;
-
 import com.cegeka.tetherj.EthSignedTransaction;
 import com.cegeka.tetherj.EthTransaction;
 import com.cegeka.tetherj.EthWallet;
@@ -21,6 +7,13 @@ import com.cegeka.tetherj.api.WalletLockedException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.Test;
+
+import java.io.*;
+import java.math.BigInteger;
+
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class TestWallets {
 

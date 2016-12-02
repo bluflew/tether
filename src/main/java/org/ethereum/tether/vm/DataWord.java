@@ -1,13 +1,13 @@
 package org.ethereum.tether.vm;
 
-import java.math.BigInteger;
-import java.nio.ByteBuffer;
-
 import org.ethereum.tether.db.ByteArrayWrapper;
 import org.ethereum.tether.util.ByteUtil;
 import org.ethereum.tether.util.FastByteComparisons;
 import org.spongycastle.util.Arrays;
 import org.spongycastle.util.encoders.Hex;
+
+import java.math.BigInteger;
+import java.nio.ByteBuffer;
 
 /**
  * DataWord is the 32-byte array representation of a 256-bit number Calculations can be done on this
@@ -83,8 +83,7 @@ public class DataWord implements Comparable<DataWord> {
      * the possible range for an int result then an ArithmeticException is thrown.
      *
      * @return this DataWord converted to an int.
-     * @throws ArithmeticException
-     *             - if this will not fit in an int.
+     * @throws ArithmeticException - if this will not fit in an int.
      */
     public int intValue() {
         int intVal = 0;
@@ -112,8 +111,7 @@ public class DataWord implements Comparable<DataWord> {
      * the possible range for a long result then an ArithmeticException is thrown.
      *
      * @return this DataWord converted to a long.
-     * @throws ArithmeticException
-     *             - if this will not fit in a long.
+     * @throws ArithmeticException - if this will not fit in a long.
      */
     public long longValue() {
 

@@ -2,14 +2,12 @@
 
 package org.ethereum.tether.crypto.cryptohash;
 
-import org.ethereum.tether.crypto.cryptohash.Digest;
-
 /**
  * <p>
  * This class implements the Keccak-256 digest algorithm under the
  * {@link org.ethereum.tether.crypto.cryptohash.Digest} API.
  * </p>
- *
+ * <p>
  * <pre>
  * ==========================(LICENSE BEGIN)============================
  *
@@ -37,8 +35,8 @@ import org.ethereum.tether.crypto.cryptohash.Digest;
  * ===========================(LICENSE END)=============================
  * </pre>
  *
- * @version $Revision: 189 $
  * @author Thomas Pornin &lt;thomas.pornin@cryptolog.com&gt;
+ * @version $Revision: 189 $
  */
 
 public class Keccak256 extends KeccakCore {
@@ -49,12 +47,16 @@ public class Keccak256 extends KeccakCore {
     public Keccak256() {
     }
 
-    /** @see org.ethereum.tether.crypto.cryptohash.Digest */
+    /**
+     * @see org.ethereum.tether.crypto.cryptohash.Digest
+     */
     public Digest copy() {
         return copyState(new Keccak256());
     }
 
-    /** @see org.ethereum.tether.crypto.cryptohash.Digest */
+    /**
+     * @see org.ethereum.tether.crypto.cryptohash.Digest
+     */
     public int getDigestLength() {
         return 32;
     }

@@ -1,17 +1,14 @@
 package org.ethereum.tether.util;
 
-import java.lang.reflect.Array;
-
-import java.net.URL;
-
-import java.security.SecureRandom;
-
-import java.util.Arrays;
-
 import javax.swing.*;
+import java.lang.reflect.Array;
+import java.net.URL;
+import java.security.SecureRandom;
+import java.util.Arrays;
 
 public class Utils {
 
+    public static double JAVA_VERSION = getJavaVersion();
     private static SecureRandom random = new SecureRandom();
 
     public static ImageIcon getImageIcon(String resource) {
@@ -23,8 +20,6 @@ public class Utils {
     public static SecureRandom getRandom() {
         return random;
     }
-
-    public static double JAVA_VERSION = getJavaVersion();
 
     static double getJavaVersion() {
         String version = System.getProperty("java.version");
