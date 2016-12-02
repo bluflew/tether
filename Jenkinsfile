@@ -7,8 +7,8 @@ VERSION_NUMBER = ""
 node('master') {
     stage('COMMIT') {
         cleanWorkspace()
-        VERSION_NUMBER = determineVersionNumber()
         git branch: BRANCH_NAME, credentialsId: 'github', url: 'git@github.com:cegeka/tether.git'
+        VERSION_NUMBER = determineVersionNumber()
     }
 }
 
