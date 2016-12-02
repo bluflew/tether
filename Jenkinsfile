@@ -9,6 +9,7 @@ node('master') {
         cleanWorkspace()
         git branch: BRANCH_NAME, credentialsId: 'github', url: 'git@github.com:cegeka/tether.git'
         VERSION_NUMBER = determineVersionNumber()
+        test()
     }
 }
 
@@ -31,6 +32,8 @@ def cleanWorkspace() {
     sh "rm -rf *"
 }
 
+/********** version number ******/
+
 def determineVersionNumber() {
 
     def incrementalVersion = determineIncrementalVersion()
@@ -52,5 +55,24 @@ def determineVersionQualifier() {
     } else {
         return "-" + BRANCH_NAME
     }
+}
+
+/********** gradle ************/
+
+def test() {
+    try {
+        grdl("test -Pversion=${VERSION_NUMBER}")
+    } finally {
+        archiveUnitTestResults()
+    }
+}
+
+def grdl(task) {
+    println "gradlew ${task}"
+    sh "./gradlew ${task}"
+}
+
+def archiveUnitTestResults() {
+    step([$class: "JUnitResultArchiver", testResults: "**/build/test-results/**/TEST-*.xml"])
 }
 
