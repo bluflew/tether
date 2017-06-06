@@ -173,6 +173,25 @@ public class EthWallet implements Serializable {
     }
 
     /**
+     * Retrieve the address, forcing a trailing 0x as needed by some Geth methods.
+     *
+     * @return Returns address formatted.
+     */
+    public String getHexPrefixedAddress() {
+        String address = getAddress();
+        if (address != null && !address.isEmpty() && !address.startsWith("0x")) {
+            //Also make standard size
+            while (address.length() < 40) {
+                address = "0" + address;
+            }
+            return "0x" + address;
+        }
+
+        return address;
+    }
+
+
+    /**
      * Generate ethereum client standard filename (uses current time).
      *
      * @return file name

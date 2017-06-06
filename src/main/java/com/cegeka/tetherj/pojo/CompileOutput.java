@@ -25,6 +25,10 @@ public class CompileOutput {
 
     @JsonAnySetter
     public void setDynamicContractData(String name, ContractData contract) {
+        final String KNOWN_PREFIX = "<stdin>:";
+        if (name != null && name.startsWith(KNOWN_PREFIX)) {
+            name = name.substring(KNOWN_PREFIX.length());
+        }
         contractData.put(name, contract);
     }
 
